@@ -33,7 +33,6 @@ export const Home: React.FC = () => {
       
       {/* Hero Section */}
       <section className="hero">
-        <div className="hero-image-bg"></div>
         <div className="hero-overlay"></div>
         <div className="blob blob-1"></div>
         
