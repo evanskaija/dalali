@@ -7,11 +7,11 @@ import { PropertyDetailsModal } from './PropertyDetailsModal';
 interface Props {
   property: Property;
   index: number;
+  onOpenDetails?: (p: Property) => void;
 }
 
-export const PropertyCard: React.FC<Props> = ({ property, index }) => {
+export const PropertyCard: React.FC<Props> = ({ property, index, onOpenDetails }) => {
   const [isSaved, setIsSaved] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem('saved_properties') || '[]');
@@ -58,7 +58,7 @@ export const PropertyCard: React.FC<Props> = ({ property, index }) => {
     <>
     <div 
       className={`property-card animate-fade-in-up delay-${(index % 3 + 1) * 100}`}
-      onClick={() => setIsModalOpen(true)}
+      onClick={() => onOpenDetails ? onOpenDetails(property) : null}
       style={{ cursor: 'pointer' }}
     >
       <div className="property-image" style={{ position: 'relative' }}>
@@ -167,12 +167,6 @@ export const PropertyCard: React.FC<Props> = ({ property, index }) => {
       </div>
     </div>
     
-    {isModalOpen && (
-      <PropertyDetailsModal 
-        property={property} 
-        onClose={() => setIsModalOpen(false)} 
-      />
-    )}
-    </>
+    </div>
   );
 };

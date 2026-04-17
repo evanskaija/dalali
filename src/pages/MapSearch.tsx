@@ -14,6 +14,7 @@ import { PropertyCard } from '../components/PropertyCard';
 import { useLanguage } from '../contexts/LanguageContext';
 import { BookingModal } from '../components/BookingModal';
 import { useNotifications } from '../contexts/NotificationContext';
+import { PropertyDetailsModal } from '../components/PropertyDetailsModal';
 
 // Default property icon
 const propertyIcon = new Icon({
@@ -58,7 +59,16 @@ export const MapSearch: React.FC = () => {
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(2000000);
   const [amenityFilters, setAmenityFilters] = useState({ water: false, electricity: false, parking: false });
+  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  
   const { t } = useLanguage();
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   const { addNotification } = useNotifications();
   const { properties } = useProperties();
   
@@ -242,7 +252,14 @@ export const MapSearch: React.FC = () => {
                         transition: 'all 0.3s ease'
                       }}
                     >
-                      <PropertyCard property={property} index={idx} />
+                      <PropertyCard 
+                        property={property} 
+                        index={idx} 
+                        onOpenDetails={(p) => {
+                          setSelectedProperty(p);
+                          setActiveProperty(p);
+                        }}
+                      />
                     </div>
                     {/* Booking logic shown only when active */}
                     {activeProperty?.id === property.id && (
@@ -303,7 +320,8 @@ export const MapSearch: React.FC = () => {
         </div>
 
         {/* Right Area - The Map */}
-        <div style={{ flex: 1, position: 'relative' }}>
+        {(!isMobile || !selectedProperty) && (
+          <div style={{ flex: 1, position: 'relative' }}>
           
           {/* Booking Success Toast */}
           {bookingSuccess && (
@@ -422,7 +440,16 @@ export const MapSearch: React.FC = () => {
 
           </MapContainer>
         </div>
+        )}
       </div>
+
+      {/* Property Details Modal */}
+      {selectedProperty && (
+        <PropertyDetailsModal 
+          property={selectedProperty} 
+          onClose={() => setSelectedProperty(null)} 
+        />
+      )}
 
       {/* Booking Modal */}
       {bookingProperty && (
