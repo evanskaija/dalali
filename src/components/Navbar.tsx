@@ -56,7 +56,7 @@ export const Navbar: React.FC = () => {
             <HelpCircle size={20} /> {t('nav.support')}
           </Link>
           
-          {(!user || user.role === 'agent') && (
+          {(!user || user.role === 'agent' || user.role === 'landlord') && (
             <Link to="/add" className="btn-primary" style={{ marginTop: 'auto' }}>
               <Plus size={20} /> {t('nav.post')}
             </Link>

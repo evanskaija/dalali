@@ -14,6 +14,17 @@ export interface Property {
   longitude: number;
   agentId: string;
   isPremium: boolean;
+  amenities?: {
+    electricity?: 'private' | 'sharable';
+    water?: 'dawasa' | 'borehole' | 'tank';
+    fenced?: boolean;
+    electricFence?: boolean;
+    cctv?: boolean;
+    securityGuard?: boolean;
+    tiled?: boolean;
+    gypsum?: boolean;
+    ac?: boolean;
+  };
 }
 
 export const mockProperties: Property[] = [

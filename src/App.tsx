@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Link } from 'react-router-dom';
 import { Home } from './pages/Home';
 import { MapSearch } from './pages/MapSearch';
 import { AddProperty } from './pages/AddProperty';
@@ -17,13 +17,25 @@ import { PropertyProvider } from './contexts/PropertyContext';
 import { Support } from './pages/Support';
 import { DynamicPage } from './pages/DynamicPage';
 
-// Security Filter: Only allows registered users to see these pages
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated } = useAuth();
+// Security Filter: Only allows specific roles to see these pages
+const ProtectedRoute = ({ children, allowedRoles }: { children: React.ReactNode, allowedRoles?: string[] }) => {
+  const { user, isAuthenticated } = useAuth();
   
   if (!isAuthenticated) {
-    // Access Denied: Send back to login
     return <Navigate to="/login" replace />;
+  }
+
+  if (allowedRoles && user && !allowedRoles.includes(user.role)) {
+    return (
+      <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-color)', color: 'var(--text-main)', padding: '2rem', textAlign: 'center' }}>
+        <h1 style={{ fontSize: '4rem' }}>🚫</h1>
+        <h2>Access Denied</h2>
+        <p style={{ color: 'var(--text-muted)', maxWidth: '400px', marginBottom: '2rem' }}>
+          This page is reserved for Property Owners and Registered Agents only.
+        </p>
+        <Link to="/" className="btn-primary" style={{ textDecoration: 'none' }}>Return Home</Link>
+      </div>
+    );
   }
 
   return <>{children}</>;
@@ -49,7 +61,7 @@ function App() {
                   ))}
 
                   {/* SECURED ROUTES: Requires Registration */}
-                  <Route path="/add" element={<ProtectedRoute><AddProperty /></ProtectedRoute>} />
+                  <Route path="/add" element={<ProtectedRoute allowedRoles={['agent', 'landlord']}><AddProperty /></ProtectedRoute>} />
                   <Route path="/chat" element={<ProtectedRoute><Chat /></ProtectedRoute>} />
                   <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
                   <Route path="/kyc" element={<ProtectedRoute><KYCVerification /></ProtectedRoute>} />

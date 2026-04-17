@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { Navbar } from '../components/Navbar';
-import { Navigation, Upload, CheckCircle, Plus, Trash2, Home, Receipt, Image as ImageIcon, Video, X } from 'lucide-react';
+import { Navigation, Upload, CheckCircle, Plus, Trash2, Home, Receipt, Image as ImageIcon, Video, X, Zap } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import { Icon } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -60,6 +60,17 @@ export const AddProperty: React.FC = () => {
   const [units, setUnits] = useState<PropertyUnit[]>([
     { id: '1', roomType: 'room', title: '', price: 0, description: '', bedrooms: 1, bathrooms: 1 }
   ]);
+  const [amenities, setAmenities] = useState({
+    electricity: 'private' as 'private' | 'sharable',
+    water: 'dawasa' as 'dawasa' | 'borehole' | 'tank',
+    fenced: true,
+    electricFence: false,
+    cctv: false,
+    securityGuard: false,
+    tiled: true,
+    gypsum: true,
+    ac: false
+  });
   const [streetName, setStreetName] = useState('');
 
   // Image Cropping state
@@ -178,6 +189,7 @@ export const AddProperty: React.FC = () => {
       status: "available",
       agentId: "a1", // Mock current agent
       isPremium: false,
+      amenities: amenities
     };
 
     addProperty(newProperty);
@@ -346,6 +358,62 @@ export const AddProperty: React.FC = () => {
                       />
                     </div>
                   </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Amenities Section */}
+            <div className="glass" style={{ padding: '1.5rem', borderRadius: 'var(--border-radius)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1.5rem' }}>
+                <Zap size={20} color="var(--primary-color)" />
+                <h3 style={{ margin: 0 }}>Utilities & Amenities</h3>
+              </div>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBottom: '1.5rem' }}>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '0.6rem', fontWeight: 600, fontSize: '0.85rem' }}>Electricity (Luku)</label>
+                  <select 
+                    value={amenities.electricity}
+                    onChange={(e) => setAmenities({...amenities, electricity: e.target.value as any})}
+                    style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--bg-color)', color: 'var(--text-main)' }}
+                  >
+                    <option value="private">Private Luku Meter</option>
+                    <option value="sharable">Sharable Luku</option>
+                  </select>
+                </div>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '0.6rem', fontWeight: 600, fontSize: '0.85rem' }}>Water Source</label>
+                  <select 
+                    value={amenities.water}
+                    onChange={(e) => setAmenities({...amenities, water: e.target.value as any})}
+                    style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--bg-color)', color: 'var(--text-main)' }}
+                  >
+                    <option value="dawasa">DAWASA (City Water)</option>
+                    <option value="borehole">Borehole</option>
+                    <option value="tank">Tank / Bought</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1rem' }}>
+                {[
+                  { id: 'fenced', label: 'Fenced Area', key: 'fenced' },
+                  { id: 'electricFence', label: 'Electric Fence', key: 'electricFence' },
+                  { id: 'cctv', label: 'CCTV Cameras', key: 'cctv' },
+                  { id: 'securityGuard', label: '24/7 Guard', key: 'securityGuard' },
+                  { id: 'tiled', label: 'Tiled Floor', key: 'tiled' },
+                  { id: 'gypsum', label: 'Gypsum Ceiling', key: 'gypsum' },
+                  { id: 'ac', label: 'Air Conditioning', key: 'ac' },
+                ].map(item => (
+                  <label key={item.id} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.85rem' }}>
+                    <input 
+                      type="checkbox" 
+                      checked={(amenities as any)[item.key]} 
+                      onChange={(e) => setAmenities({...amenities, [item.key]: e.target.checked})}
+                      style={{ width: '18px', height: '18px', accentColor: 'var(--primary-color)' }}
+                    />
+                    {item.label}
+                  </label>
                 ))}
               </div>
             </div>

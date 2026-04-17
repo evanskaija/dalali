@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { Property } from '../mockData/properties';
-import { X, MapPin, BedDouble, Bath, Car, ChevronLeft, ChevronRight, Video, Phone, MessageCircle } from 'lucide-react';
+import { X, MapPin, BedDouble, Bath, Car, ChevronLeft, ChevronRight, Video, Phone, MessageCircle, Zap, Shield, Droplets, CheckCircle } from 'lucide-react';
 import { mockAgents } from '../mockData/agents';
 
 interface Props {
@@ -142,11 +142,58 @@ export const PropertyDetailsModal: React.FC<Props> = ({ property, onClose }) => 
                 <Car size={20} color="var(--primary-color)" />
               </div>
               <div>
-                <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>Yes</div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Parking</div>
+                <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>{property.amenities?.fenced ? 'Yes' : 'Open'}</div>
+                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Parking/Fence</div>
               </div>
             </div>
           </div>
+
+          {/* Utilities Quick View */}
+          <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
+            <div className="glass" style={{ padding: '0.8rem 1.2rem', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '10px', border: '1px solid rgba(16,185,129,0.2)' }}>
+              <Zap size={18} color="var(--primary-color)" />
+              <div>
+                <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Electricity</div>
+                <div style={{ fontSize: '0.85rem', fontWeight: 700 }}>{property.amenities?.electricity === 'sharable' ? 'Sharable Luku' : 'Private Meter'}</div>
+              </div>
+            </div>
+            <div className="glass" style={{ padding: '0.8rem 1.2rem', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '10px', border: '1px solid rgba(16,185,129,0.2)' }}>
+              <Droplets size={18} color="var(--primary-color)" />
+              <div>
+                <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Water Source</div>
+                <div style={{ fontSize: '0.85rem', fontWeight: 700 }}>{property.amenities?.water?.toUpperCase() || 'DAWASA'}</div>
+              </div>
+            </div>
+            {property.amenities?.ac && (
+              <div className="glass" style={{ padding: '0.8rem 1.2rem', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '10px', border: '1px solid rgba(16,185,129,0.2)' }}>
+                <Shield size={18} color="var(--primary-color)" />
+                <div>
+                  <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Comfort</div>
+                  <div style={{ fontSize: '0.85rem', fontWeight: 700 }}>Air Conditioned</div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Amenities Checklist */}
+          {property.amenities && (
+            <div style={{ marginBottom: '2rem' }}>
+              <h3 style={{ marginBottom: '1rem' }}>Additional Features</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
+                {[
+                  { key: 'electricFence', label: 'Electric Fence' },
+                  { key: 'cctv', label: 'CCTV Security' },
+                  { key: 'securityGuard', label: '24/7 Security Guard' },
+                  { key: 'tiled', label: 'Tiled Floors' },
+                  { key: 'gypsum', label: 'Gypsum Ceiling' },
+                ].filter(item => (property.amenities as any)[item.key]).map(item => (
+                  <div key={item.key} style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-main)', fontSize: '0.9rem' }}>
+                    <CheckCircle size={16} color="#10b981" /> {item.label}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Description */}
           <div style={{ marginBottom: '2rem' }}>
