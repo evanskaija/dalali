@@ -165,7 +165,5 @@ export const PropertyCard: React.FC<Props> = ({ property, index, onOpenDetails }
         )}
       </div>
     </div>
-    
-    </div>
   );
 };
