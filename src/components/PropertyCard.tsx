@@ -55,7 +55,6 @@ export const PropertyCard: React.FC<Props> = ({ property, index, onOpenDetails }
   };
 
   return (
-    <>
     <div 
       className={`property-card animate-fade-in-up delay-${(index % 3 + 1) * 100}`}
       onClick={() => onOpenDetails ? onOpenDetails(property) : null}
