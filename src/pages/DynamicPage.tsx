@@ -2,7 +2,10 @@ import React from 'react';
 import { useLocation, useNavigate, useParams, Link } from 'react-router-dom';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
-import { ArrowLeft, Home, Building2, MapPin, Clock, Shield, Globe, Users, Briefcase, Landmark, Leaf, FileText, Zap, PenTool, ChevronRight, CheckCircle, TrendingUp, Heart, Award, Mail, BookOpen, Target, Lightbulb, Handshake } from 'lucide-react';
+import { ArrowLeft, Home, Building2, MapPin, Clock, Shield, Globe, Users, Briefcase, Landmark, Leaf, FileText, Zap, PenTool, ChevronRight, CheckCircle, TrendingUp, Heart, Award, Mail, BookOpen, Target, Lightbulb, Handshake, BedDouble, Bath, Car, Star } from 'lucide-react';
+import { useProperties } from '../contexts/PropertyContext';
+import { PropertyCard } from '../components/PropertyCard';
+import type { Property } from '../mockData/properties';
 
 // ─── Shared section styles ────────────────────────────────────────────────
 const sectionStyle: React.CSSProperties = { padding: '4rem 0' };
@@ -607,22 +610,112 @@ const BrandPage = () => (
 );
 
 // ═══════════════════════════════════════════════════════════════════════════
+// PAGE: Property Category Landing
+// ═══════════════════════════════════════════════════════════════════════════
+const CategoryPage = ({ type, properties }: { type: string, properties: any[] }) => {
+  const normalizedType = type === 'rooms' ? 'room' : 
+                        type === 'master-room' ? 'master-room' : 
+                        type === 'houses' ? 'house' : 
+                        type === 'apartments' ? 'apartment' : 
+                        type === 'plots' ? 'plot' : 
+                        type === 'halls' ? 'hall' : type;
+
+  const categoryProps = properties.filter(p => p.type === normalizedType);
+  
+  const getCatInfo = () => {
+    switch(normalizedType) {
+      case 'room': return { title: 'Single Rooms', sub: 'Affordable Living in the City', desc: 'Our single rooms are carefully selected for students and young professionals seeking budget-friendly accommodation without sacrificing basic needs.' };
+      case 'master-room': return { title: 'Master Rooms', sub: 'Premium & Self-Contained', desc: 'Experience the perfect balance of privacy and affordability. All master rooms include ensuite bathrooms and premium tiling.' };
+      case 'house': return { title: 'Full Houses', sub: 'Spacious Family Homes', desc: 'Stand-alone houses and bungalows designed for comfort. Verified ownership and gated security included.' };
+      case 'apartment': return { title: 'Modern Apartments', sub: 'Luxury Urban Lifestyle', desc: 'Secure, modern apartment complexes in premium locations like Masaki and Mikocheni. Features pools, gyms, and 24/7 security.' };
+      case 'plot': return { title: 'Kiwanja / Plots', sub: 'Secure Land Investment', desc: 'Surveyed plots and compounds with clear title deeds. Perfect for building your future home or commercial project.' };
+      case 'hall': return { title: 'Ukumbi / Halls', sub: 'Premium Event Venues', desc: 'Professional venues for weddings, conferences, and celebrations. High capacity with modern acoustics and AC.' };
+      default: return { title: 'Property Listings', sub: 'Available Opportunities', desc: 'Explore our verified property listings across Tanzania.' };
+    }
+  };
+
+  const info = getCatInfo();
+
+  return (
+    <>
+      <section style={{ ...sectionStyle, textAlign: 'center' }}>
+        <h1 style={{ fontSize: '3rem', marginBottom: '1rem' }}>{info.title.split(' ')[0]} <span className="text-gradient">{info.title.split(' ').slice(1).join(' ')}</span></h1>
+        <p style={{ color: 'var(--primary-color)', fontWeight: 700, fontSize: '1.2rem', marginBottom: '1rem' }}>{info.sub}</p>
+        <p style={{ color: 'var(--text-muted)', maxWidth: '700px', margin: '0 auto 3rem', lineHeight: 1.7 }}>{info.desc}</p>
+      </section>
+
+      <section style={sectionStyle}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
+          <h2>Available <span className="text-gradient">Listings</span></h2>
+          <div style={{ background: 'rgba(16,185,129,0.1)', color: 'var(--primary-color)', padding: '6px 16px', borderRadius: '30px', fontWeight: 600 }}>
+            {categoryProps.length} Results Found
+          </div>
+        </div>
+
+        {categoryProps.length > 0 ? (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem' }}>
+            {categoryProps.map((p, i) => (
+              <PropertyCard key={p.id} property={p} index={i} />
+            ))}
+          </div>
+        ) : (
+          <div className="glass" style={{ ...glassCard, textAlign: 'center', padding: '5rem' }}>
+            <h3>No specific {info.title} available right now.</h3>
+            <p style={{ color: 'var(--text-muted)' }}>Check back soon or browse other categories.</p>
+            <Link to="/search" className="btn-primary" style={{ textDecoration: 'none', marginTop: '1.5rem', display: 'inline-block' }}>Visit Map Search</Link>
+          </div>
+        )}
+      </section>
+
+      {/* Extra Info Section */}
+      <section style={sectionStyle}>
+        <div className="glass" style={{ ...glassCard, padding: '3rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '3rem' }}>
+            <div>
+              <CheckCircle color="var(--primary-color)" style={{ marginBottom: '1rem' }} />
+              <h4 style={{ marginBottom: '0.8rem' }}>Verified Map</h4>
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Every listing is verified with actual GPS coordinates and street-level validation.</p>
+            </div>
+            <div>
+              <Zap color="var(--primary-color)" style={{ marginBottom: '1rem' }} />
+              <h4 style={{ marginBottom: '0.8rem' }}>Direct Reach</h4>
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Connect with licensed agents (Dalalis) instantly via Call, SMS, or WhatsApp.</p>
+            </div>
+            <div>
+              <Shield color="var(--primary-color)" style={{ marginBottom: '1rem' }} />
+              <h4 style={{ marginBottom: '0.8rem' }}>Escrow Safety</h4>
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Payments are protected via our secure escrow system to ensure trust and transparency.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
 // MAIN: DynamicPage Router
 // ═══════════════════════════════════════════════════════════════════════════
 export const DynamicPage: React.FC = () => {
-  const location = useLocation();
+  const { pathname } = useLocation();
+  const { type } = useParams<{ type?: string }>();
   const navigate = useNavigate();
-  const params = useParams();
-  const path = location.pathname.toLowerCase();
+  const { properties } = useProperties();
+  const path = pathname.toLowerCase();
 
   const renderContent = () => {
+    // Handle category pages
+    if (path.startsWith('/category/') && type) {
+      return <CategoryPage type={type} properties={properties} />;
+    }
+
     if (path === '/residential') return <ResidentialPage />;
     if (path === '/commercial') return <CommercialPage />;
     if (path === '/plots') return <PlotsPage />;
     if (path === '/short-stays') return <ShortStaysPage />;
     if (path === '/escrow') return <EscrowPage />;
     if (path === '/cities') return <CitiesPage />;
-    if (path.startsWith('/partner')) return <PartnerPage type={params.type || 'dalali'} />;
+    if (path.startsWith('/partner')) return <PartnerPage type={type || 'dalali'} />;
     if (path === '/franchise') return <FranchisePage />;
     if (path === '/business') return <BusinessPage />;
     if (path === '/about') return <AboutPage />;

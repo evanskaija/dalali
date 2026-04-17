@@ -24,16 +24,7 @@ export const Home: React.FC = () => {
   };
 
   const handleCategoryClick = (category: string) => {
-    // Navigate to specialized pages instead of just search
-    if (['rooms', 'master-room', 'houses', 'apartments'].includes(category)) {
-      navigate('/residential');
-    } else if (category === 'plots') {
-      navigate('/plots');
-    } else if (category === 'halls') {
-      navigate('/search?type=hall'); // Lead to search as specific landing for halls
-    } else {
-      navigate(`/search?type=${category.toLowerCase()}`);
-    }
+    navigate(`/category/${category.toLowerCase()}`);
   };
 
   return (

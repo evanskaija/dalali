@@ -44,7 +44,7 @@ function App() {
                   <Route path="/support" element={<Support />} />
                   
                   {/* Corporate & Service Pages */}
-                  {['/about', '/careers', '/sustainability', '/press', '/blog', '/brand', '/partner/:type', '/cities', '/short-stays', '/escrow', '/franchise', '/business', '/residential', '/commercial', '/plots'].map(path => (
+                  {['/about', '/careers', '/sustainability', '/press', '/blog', '/brand', '/partner/:type', '/cities', '/short-stays', '/escrow', '/franchise', '/business', '/residential', '/commercial', '/plots', '/category/:type'].map(path => (
                     <Route key={path} path={path} element={<DynamicPage />} />
                   ))}
 
