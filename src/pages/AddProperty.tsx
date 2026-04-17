@@ -36,16 +36,31 @@ interface PropertyUnit {
   bathrooms: number;
 }
 
+const NEIGHBORHOOD_COORDINATES: Record<string, { lat: number, lng: number }> = {
+  'Mikocheni': { lat: -6.7601, lng: 39.2393 },
+  'Masaki': { lat: -6.7368, lng: 39.2785 },
+  'Sinza': { lat: -6.7865, lng: 39.2274 },
+  'Ubungo': { lat: -6.7905, lng: 39.2079 },
+  'Kijitonyama': { lat: -6.7798, lng: 39.2443 },
+  'Oyster Bay': { lat: -6.7570, lng: 39.2740 },
+  'Kigamboni': { lat: -6.8200, lng: 39.3000 },
+  'Mbezi Beach': { lat: -6.7200, lng: 39.2300 },
+  'Tegeta': { lat: -6.6800, lng: 39.1900 },
+  'Bunju': { lat: -6.6200, lng: 39.1500 },
+  'Kariakoo': { lat: -6.8211, lng: 39.2784 },
+  'Posta (CBD)': { lat: -6.8161, lng: 39.2903 },
+};
+
 export const AddProperty: React.FC = () => {
   const [loadingLocation, setLoadingLocation] = useState(false);
   const [position, setPosition] = useState<[number, number] | null>(null);
   const [success, setSuccess] = useState(false);
   const { addProperty } = useProperties();
   
-  // Units state
   const [units, setUnits] = useState<PropertyUnit[]>([
     { id: '1', roomType: 'room', title: '', price: 0, description: '', bedrooms: 1, bathrooms: 1 }
   ]);
+  const [streetName, setStreetName] = useState('');
 
   // Image Cropping state
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -55,6 +70,14 @@ export const AddProperty: React.FC = () => {
   const videoInputRef = useRef<HTMLInputElement>(null);
 
   const centerPosition: [number, number] = [-6.7924, 39.2083];
+
+  const handleStreetChange = (name: string) => {
+    setStreetName(name);
+    const coords = NEIGHBORHOOD_COORDINATES[name];
+    if (coords) {
+      setPosition([coords.lat, coords.lng]);
+    }
+  };
 
   const handleDetectLocation = () => {
     setLoadingLocation(true);
@@ -145,7 +168,7 @@ export const AddProperty: React.FC = () => {
       title: mainUnit.title || "New Property",
       type: mainUnit.roomType as any,
       price: mainUnit.price,
-      location: "Added by Dalali", // In real app, geocode position
+      location: streetName || "Dar es Salaam", 
       latitude: position[0],
       longitude: position[1],
       images: croppedImages.length > 0 ? croppedImages : ["https://images.unsplash.com/photo-1522708323590-d24dbb6b0267"],
@@ -216,12 +239,20 @@ export const AddProperty: React.FC = () => {
               </div>
               <div style={{ marginBottom: '1rem' }}>
                 <label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: 600, fontSize: '0.85rem' }}>Street or Compound Name</label>
-                <input 
-                  type="text" 
-                  placeholder="e.g. Chole Road, Masaki" 
-                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'rgba(255,255,255,0.03)', color: 'var(--text-main)', boxSizing: 'border-box' }} 
+                <select 
+                  value={streetName}
+                  onChange={(e) => handleStreetChange(e.target.value)}
+                  style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--bg-color)', color: 'var(--text-main)', boxSizing: 'border-box', cursor: 'pointer' }} 
                   required
-                />
+                >
+                  <option value="">-- Scroll to select street --</option>
+                  {Object.keys(NEIGHBORHOOD_COORDINATES).map(name => (
+                    <option key={name} value={name}>{name}</option>
+                  ))}
+                </select>
+                <p style={{ margin: '6px 0 0', color: 'var(--text-muted)', fontSize: '0.75rem' }}>
+                  Selecting a name will automatically update your GPS map pin below.
+                </p>
               </div>
             </div>
 
