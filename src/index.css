@@ -63,8 +63,16 @@ h1, h2, h3, h4 {
   line-height: 1.2;
 }
 
-h1 { font-size: 3.5rem; letter-spacing: -0.02em; }
+h1 { 
+  font-size: 3.5rem; 
+  letter-spacing: -0.02em; 
+}
 h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+
+@media (max-width: 768px) {
+  h1 { font-size: 2.2rem; }
+  h2 { font-size: 1.8rem; }
+}
 h3 { font-size: 1.5rem; }
 
 /* Utilities */
@@ -335,11 +343,18 @@ h3 { font-size: 1.5rem; }
 
 .search-box {
   margin-top: 3rem;
-  padding: 1rem;
+  padding: 1.5rem;
   border-radius: var(--border-radius-lg);
   display: flex;
   gap: 1rem;
   align-items: center;
+}
+
+@media (max-width: 768px) {
+  .search-box {
+    flex-direction: column;
+    padding: 1rem;
+  }
 }
 
 .search-input-group {
