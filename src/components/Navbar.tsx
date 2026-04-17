@@ -40,24 +40,25 @@ export const Navbar: React.FC = () => {
         </button>
 
         <div className={`nav-links ${menuOpen ? 'open' : ''}`}>
-          <Link to="/" className={`nav-link flex items-center gap-2 ${location.pathname === '/' ? 'active' : ''}`}>
-            {t('nav.home')}
+          <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}>
+            <Home size={20} /> {t('nav.home')}
           </Link>
-          <Link to="/search" className={`nav-link flex items-center gap-2 ${location.pathname === '/search' ? 'active' : ''}`}>
-            {t('nav.search')}
+          <Link to="/search" className={`nav-link ${location.pathname === '/search' ? 'active' : ''}`}>
+            <MapPin size={20} /> {t('nav.search')}
           </Link>
-          <Link to="/chat" className={`nav-link flex items-center gap-2 ${location.pathname === '/chat' ? 'active' : ''}`} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <MessageSquare size={15} /> {t('nav.chat')}
+          <Link to="/chat" className={`nav-link ${location.pathname === '/chat' ? 'active' : ''}`}>
+            <MessageSquare size={20} /> {t('nav.chat')}
           </Link>
-          <Link to="/saved" className={`nav-link flex items-center gap-2 ${location.pathname === '/saved' ? 'active' : ''}`} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <Bookmark size={15} /> {t('nav.saved')}
+          <Link to="/saved" className={`nav-link ${location.pathname === '/saved' ? 'active' : ''}`}>
+            <Bookmark size={20} /> {t('nav.saved')}
           </Link>
-          <Link to="/support" className={`nav-link flex items-center gap-2 ${location.pathname === '/support' ? 'active' : ''}`} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <HelpCircle size={15} /> {t('nav.support')}
+          <Link to="/support" className={`nav-link ${location.pathname === '/support' ? 'active' : ''}`}>
+            <HelpCircle size={20} /> {t('nav.support')}
           </Link>
+          
           {(!user || user.role === 'agent') && (
-            <Link to="/add" className="btn-primary">
-              {t('nav.post')}
+            <Link to="/add" className="btn-primary" style={{ marginTop: 'auto' }}>
+              <Plus size={20} /> {t('nav.post')}
             </Link>
           )}
           
