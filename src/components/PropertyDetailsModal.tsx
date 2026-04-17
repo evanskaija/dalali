@@ -32,10 +32,10 @@ export const PropertyDetailsModal: React.FC<Props> = ({ property, onClose }) => 
     <div 
       onClick={onClose}
       style={{
-        position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 9999,
+        position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 999999,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(5px)',
-        padding: '1rem'
+        background: 'rgba(0,0,0,0.9)', backdropFilter: 'blur(8px)',
+        padding: '1rem', overflowY: 'auto'
     }}>
       <div 
         className="glass" 
