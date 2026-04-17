@@ -334,7 +334,7 @@ h3 { font-size: 1.5rem; }
   align-items: center;
   padding-top: 5rem;
   overflow: hidden;
-  background: url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1600') center/cover no-repeat;
+  background: url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1600&blur=40') center/cover no-repeat;
 }
 
 .hero-overlay {
