@@ -334,14 +334,14 @@ h3 { font-size: 1.5rem; }
 /* Hero Section Component */
 .hero {
   position: relative;
-  min-height: 110vh; /* Slightly more for mobile search box comfort */
+  min-height: 110vh;
   display: flex;
   align-items: center;
   padding-top: 5rem;
   width: 100vw;
   overflow: hidden;
-  background: url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1600') center/cover no-repeat;
-  background-attachment: scroll; /* Better for mobile performance */
+  background: url('https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1600') center/cover no-repeat;
+  background-attachment: scroll;
 }
 
 .hero-overlay {
@@ -350,7 +350,9 @@ h3 { font-size: 1.5rem; }
   left: 0;
   width: 100%;
   height: 100%;
-  background: var(--hero-overlay);
+  background: linear-gradient(135deg, rgba(30, 58, 138, 0.6) 0%, rgba(30, 58, 138, 0.2) 100%);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   z-index: -1;
 }
 
