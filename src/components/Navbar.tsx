@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, User, Moon, Sun, Globe, LogOut, MessageSquare, ShieldCheck, Bookmark, HelpCircle, Menu, X } from 'lucide-react';
+import { Home, User, Moon, Sun, Globe, LogOut, MessageSquare, ShieldCheck, Bookmark, HelpCircle, Menu, X, MapPin, Plus } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
