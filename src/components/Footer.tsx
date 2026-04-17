@@ -1,10 +1,9 @@
 import React from 'react';
-import { Home, Mail, Phone, MapPin, Share2, Globe, ShieldCheck } from 'lucide-react';
+import { Home, Share2, Globe } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Link } from 'react-router-dom';
 
 export const Footer: React.FC = () => {
-  const { t } = useLanguage();
   
   return (
     <footer className="footer" style={{ borderTop: '1px solid var(--border-color)', background: 'var(--bg-secondary)', paddingTop: '4rem', paddingBottom: '2rem' }}>

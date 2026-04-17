@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { Property } from '../mockData/properties';
-import { X, MapPin, BedDouble, Bath, Car, ChevronLeft, ChevronRight, Video, Bookmark, Phone, MessageCircle } from 'lucide-react';
+import { X, MapPin, BedDouble, Bath, Car, ChevronLeft, ChevronRight, Video, Phone, MessageCircle } from 'lucide-react';
 import { mockAgents } from '../mockData/agents';
 
 interface Props {

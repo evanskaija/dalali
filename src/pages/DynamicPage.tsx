@@ -2,7 +2,7 @@ import React from 'react';
 import { useLocation, useNavigate, useParams, Link } from 'react-router-dom';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
-import { ArrowLeft, Home, Building2, MapPin, Clock, Shield, Globe, Users, Briefcase, Landmark, Leaf, FileText, Zap, PenTool, ChevronRight, Star, CheckCircle, TrendingUp, Heart, Award, Mail, Phone, BookOpen, Target, Lightbulb, Handshake } from 'lucide-react';
+import { ArrowLeft, Home, Building2, MapPin, Clock, Shield, Globe, Users, Briefcase, Landmark, Leaf, FileText, Zap, PenTool, ChevronRight, CheckCircle, TrendingUp, Heart, Award, Mail, BookOpen, Target, Lightbulb, Handshake } from 'lucide-react';
 
 // ─── Shared section styles ────────────────────────────────────────────────
 const sectionStyle: React.CSSProperties = { padding: '4rem 0' };
