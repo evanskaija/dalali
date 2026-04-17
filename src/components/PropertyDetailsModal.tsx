@@ -116,8 +116,8 @@ export const PropertyDetailsModal: React.FC<Props> = ({ property, onClose }) => 
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '1.5rem', margin: '2rem 0', padding: '1.5rem', background: 'rgba(255,255,255,0.02)', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ display: 'flex', gap: '1.5rem', margin: '2rem 0', padding: '1.5rem', background: 'rgba(255,255,255,0.02)', borderRadius: '12px', border: '1px solid var(--border-color)', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: '100px' }}>
               <div style={{ background: 'var(--bg-color)', width: '45px', height: '45px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <BedDouble size={20} color="var(--primary-color)" />
               </div>
@@ -127,9 +127,7 @@ export const PropertyDetailsModal: React.FC<Props> = ({ property, onClose }) => 
               </div>
             </div>
             
-            <div style={{ width: '1px', background: 'var(--border-color)' }}></div>
-            
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: '100px' }}>
               <div style={{ background: 'var(--bg-color)', width: '45px', height: '45px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Bath size={20} color="var(--primary-color)" />
               </div>
@@ -139,9 +137,7 @@ export const PropertyDetailsModal: React.FC<Props> = ({ property, onClose }) => 
               </div>
             </div>
 
-            <div style={{ width: '1px', background: 'var(--border-color)' }}></div>
-            
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: '100px' }}>
               <div style={{ background: 'var(--bg-color)', width: '45px', height: '45px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Car size={20} color="var(--primary-color)" />
               </div>
