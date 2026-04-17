@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import type { Property } from '../mockData/properties';
 import { MapPin, BedDouble, Bath, Car, Camera, Video, Bookmark, Mail, MessageSquare, MessageCircle } from 'lucide-react';
 import { mockAgents } from '../mockData/agents';
-import { PropertyDetailsModal } from './PropertyDetailsModal';
 
 interface Props {
   property: Property;

@@ -2,11 +2,10 @@ import React from 'react';
 import { useLocation, useNavigate, useParams, Link } from 'react-router-dom';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
-import { ArrowLeft, Home, Building2, MapPin, Clock, Shield, Globe, Users, Briefcase, Landmark, Leaf, FileText, Zap, PenTool, ChevronRight, CheckCircle, TrendingUp, Heart, Award, Mail, BookOpen, Target, Lightbulb, Handshake, BedDouble, Bath, Car, Star } from 'lucide-react';
+import { ArrowLeft, Home, Building2, MapPin, Clock, Shield, Globe, Users, Briefcase, Landmark, Leaf, FileText, Zap, PenTool, ChevronRight, CheckCircle, TrendingUp, Heart, Award, Mail, BookOpen, Target, Lightbulb, Handshake } from 'lucide-react';
 import { useProperties } from '../contexts/PropertyContext';
 import { PropertyCard } from '../components/PropertyCard';
 import { PropertyDetailsModal } from '../components/PropertyDetailsModal';
-import type { Property } from '../mockData/properties';
 
 // ─── Shared section styles ────────────────────────────────────────────────
 const sectionStyle: React.CSSProperties = { padding: '4rem 0' };
