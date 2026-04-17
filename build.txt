@@ -1,0 +1,11 @@
+
+> dalali-app@0.0.0 build
+> tsc -b && vite build
+
+src/App.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+src/components/Navbar.tsx(3,16): error TS6133: 'Search' is declared but its value is never read.
+src/components/Navbar.tsx(3,30): error TS6133: 'Menu' is declared but its value is never read.
+src/components/Navbar.tsx(3,36): error TS6133: 'X' is declared but its value is never read.
+src/components/Navbar.tsx(7,10): error TS6133: 'mobileMenuOpen' is declared but its value is never read.
+src/components/Navbar.tsx(7,26): error TS6133: 'setMobileMenuOpen' is declared but its value is never read.
+src/components/PropertyCard.tsx(2,10): error TS1484: 'Property' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
