@@ -37,18 +37,19 @@ interface PropertyUnit {
 }
 
 const NEIGHBORHOOD_COORDINATES: Record<string, { lat: number, lng: number }> = {
-  'Mikocheni': { lat: -6.7601, lng: 39.2393 },
-  'Masaki': { lat: -6.7368, lng: 39.2785 },
-  'Sinza': { lat: -6.7865, lng: 39.2274 },
-  'Ubungo': { lat: -6.7905, lng: 39.2079 },
-  'Kijitonyama': { lat: -6.7798, lng: 39.2443 },
-  'Oyster Bay': { lat: -6.7570, lng: 39.2740 },
-  'Kigamboni': { lat: -6.8200, lng: 39.3000 },
-  'Mbezi Beach': { lat: -6.7200, lng: 39.2300 },
-  'Tegeta': { lat: -6.6800, lng: 39.1900 },
-  'Bunju': { lat: -6.6200, lng: 39.1500 },
-  'Kariakoo': { lat: -6.8211, lng: 39.2784 },
-  'Posta (CBD)': { lat: -6.8161, lng: 39.2903 },
+  'Mikocheni / Kwa Warioba': { lat: -6.7601, lng: 39.2393 },
+  'Masaki / Sea Cliff': { lat: -6.7368, lng: 39.2785 },
+  'Sinza / Mori': { lat: -6.7865, lng: 39.2274 },
+  'Ubungo / Terminal': { lat: -6.7905, lng: 39.2079 },
+  'Kijitonyama / Sayansi': { lat: -6.7798, lng: 39.2443 },
+  'Oyster Bay / Haile Selassie': { lat: -6.7570, lng: 39.2740 },
+  'Kigamboni / Kibada': { lat: -6.8200, lng: 39.3000 },
+  'Mbezi Beach / Africana': { lat: -6.7200, lng: 39.2300 },
+  'Tegeta / Kwa Ndui': { lat: -6.6800, lng: 39.1900 },
+  'Temeke / Uhasibu': { lat: -6.8500, lng: 39.2700 },
+  'Bunju / Moga': { lat: -6.6200, lng: 39.1500 },
+  'Kariakoo / Market': { lat: -6.8211, lng: 39.2784 },
+  'Posta / CBD': { lat: -6.8161, lng: 39.2903 },
 };
 
 export const AddProperty: React.FC = () => {
@@ -320,8 +321,10 @@ export const AddProperty: React.FC = () => {
                         >
                           <option value="room">Single Room</option>
                           <option value="master-room">Master Room</option>
-                          <option value="apartment">Apartment / Flat</option>
-                          <option value="house">Stand-alone</option>
+                          <option value="house">Full House</option>
+                          <option value="apartment">Apartments</option>
+                          <option value="plot">Compounds / Kiwanja</option>
+                          <option value="hall">Halls / Ukumbi</option>
                         </select>
                       </div>
                     </div>
