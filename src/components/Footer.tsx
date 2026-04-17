@@ -1,6 +1,4 @@
-import React from 'react';
 import { Home, Share2, Globe } from 'lucide-react';
-import { useLanguage } from '../contexts/LanguageContext';
 import { Link } from 'react-router-dom';
 
 export const Footer: React.FC = () => {
