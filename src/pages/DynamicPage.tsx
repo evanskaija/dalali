@@ -5,6 +5,7 @@ import { Footer } from '../components/Footer';
 import { ArrowLeft, Home, Building2, MapPin, Clock, Shield, Globe, Users, Briefcase, Landmark, Leaf, FileText, Zap, PenTool, ChevronRight, CheckCircle, TrendingUp, Heart, Award, Mail, BookOpen, Target, Lightbulb, Handshake, BedDouble, Bath, Car, Star } from 'lucide-react';
 import { useProperties } from '../contexts/PropertyContext';
 import { PropertyCard } from '../components/PropertyCard';
+import { PropertyDetailsModal } from '../components/PropertyDetailsModal';
 import type { Property } from '../mockData/properties';
 
 // ─── Shared section styles ────────────────────────────────────────────────
@@ -613,6 +614,7 @@ const BrandPage = () => (
 // PAGE: Property Category Landing
 // ═══════════════════════════════════════════════════════════════════════════
 const CategoryPage = ({ type, properties }: { type: string, properties: any[] }) => {
+  const [selectedProperty, setSelectedProperty] = React.useState<any | null>(null);
   const normalizedType = type === 'rooms' ? 'room' : 
                         type === 'master-room' ? 'master-room' : 
                         type === 'houses' ? 'house' : 
@@ -655,7 +657,12 @@ const CategoryPage = ({ type, properties }: { type: string, properties: any[] })
         {categoryProps.length > 0 ? (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem' }}>
             {categoryProps.map((p, i) => (
-              <PropertyCard key={p.id} property={p} index={i} />
+              <PropertyCard 
+                key={p.id} 
+                property={p} 
+                index={i} 
+                onOpenDetails={(prop) => setSelectedProperty(prop)} 
+              />
             ))}
           </div>
         ) : (
@@ -666,6 +673,14 @@ const CategoryPage = ({ type, properties }: { type: string, properties: any[] })
           </div>
         )}
       </section>
+
+      {/* Detail Modal */}
+      {selectedProperty && (
+        <PropertyDetailsModal 
+          property={selectedProperty} 
+          onClose={() => setSelectedProperty(null)} 
+        />
+      )}
 
       {/* Extra Info Section */}
       <section style={sectionStyle}>
