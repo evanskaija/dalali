@@ -35,7 +35,11 @@ export const Navbar: React.FC = () => {
           <span>Nyumba<span className="text-gradient">App</span></span>
         </Link>
         
-        <button className="mobile-menu-btn" onClick={() => setMenuOpen(!menuOpen)}>
+        <button 
+          className="mobile-menu-btn" 
+          onClick={() => setMenuOpen(!menuOpen)}
+          style={{ color: menuOpen ? 'var(--danger)' : 'var(--text-main)' }}
+        >
           {menuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
 

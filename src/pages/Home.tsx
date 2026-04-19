@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, MapPin, Building, Activity } from 'lucide-react';
+import { Search, MapPin, Building, X } from 'lucide-react';
 import { Navbar } from '../components/Navbar';
 import { PropertyCard } from '../components/PropertyCard';
 import { useProperties } from '../contexts/PropertyContext';
@@ -11,13 +11,12 @@ export const Home: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const { properties } = useProperties();
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget as HTMLFormElement);
-    const q = formData.get('q');
-    if (q) {
-      navigate(`/search?q=${encodeURIComponent(q.toString())}`);
+    if (searchQuery) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
     } else {
       navigate('/search');
     }
@@ -48,9 +47,31 @@ export const Home: React.FC = () => {
                 <input 
                   type="text" 
                   name="q"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={t('hero.searchPlaceholder')} 
                   required
                 />
+                {searchQuery && (
+                  <button 
+                    type="button" 
+                    onClick={() => setSearchQuery('')}
+                    style={{ 
+                      background: 'rgba(239, 68, 68, 0.15)', 
+                      border: '1px solid rgba(239, 68, 68, 0.2)', 
+                      color: '#ef4444', 
+                      cursor: 'pointer', 
+                      display: 'flex', 
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '6px',
+                      borderRadius: '50%',
+                      marginRight: '8px'
+                    }}
+                  >
+                    <X size={14} strokeWidth={3} />
+                  </button>
+                )}
               </div>
               <button type="submit" className="btn-primary">
                 <Search size={20} />

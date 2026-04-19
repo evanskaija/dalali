@@ -99,7 +99,15 @@ export const SearchPortal: React.FC = () => {
           <div className="animate-fade-in-up" style={{ width: '100%', maxWidth: '600px' }}>
             <div className="glass" style={{ padding: '2.5rem', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.1)' }}>
               <div style={{ marginBottom: '2rem' }}>
-                <button onClick={() => setStep(1)} style={{ background: 'transparent', border: 'none', color: 'var(--primary-color)', cursor: 'pointer', marginBottom: '1rem', padding: 0, fontWeight: 600 }}>← {t('search.changeCategory')}</button>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <button onClick={() => setStep(1)} style={{ background: 'transparent', border: 'none', color: 'var(--primary-color)', cursor: 'pointer', padding: 0, fontWeight: 600 }}>← {t('search.changeCategory')}</button>
+                <button 
+                  onClick={() => navigate('/')} 
+                  style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', color: '#ef4444', cursor: 'pointer', padding: '6px 12px', borderRadius: '8px', fontSize: '0.8rem', fontWeight: 600 }}
+                >
+                  {t('common.cancel')}
+                </button>
+              </div>
                 <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>{t('search.generalInfo')}</h3>
                 <p className="text-muted" style={{ marginBottom: '1.5rem' }}>{language === 'en' ? 'Search in:' : 'Tafuta katika:'} {categories.find(c => c.id === selectedCategory)?.label}</p>
                 

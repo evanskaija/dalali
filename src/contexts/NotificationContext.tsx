@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, type ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { Bell, X } from 'lucide-react';
 
 export interface Notification {
   id: string;
@@ -28,11 +29,21 @@ const INITIAL_NOTIFICATIONS: Notification[] = [
 
 export const NotificationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [notifications, setNotifications] = useState<Notification[]>(INITIAL_NOTIFICATIONS);
+  const [toast, setToast] = useState<Notification | null>(null);
+
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => setToast(null), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
   const addNotification = (n: Omit<Notification, 'id' | 'read' | 'createdAt'>) => {
-    setNotifications(prev => [{ ...n, id: `n${Date.now()}`, read: false, createdAt: new Date() }, ...prev]);
+    const newNotif = { ...n, id: `n${Date.now()}`, read: false, createdAt: new Date() };
+    setNotifications(prev => [newNotif, ...prev]);
+    setToast(newNotif);
   };
 
   const markAllRead = () => setNotifications(prev => prev.map(n => ({ ...n, read: true })));
@@ -41,6 +52,40 @@ export const NotificationProvider: React.FC<{ children: ReactNode }> = ({ childr
   return (
     <NotificationContext.Provider value={{ notifications, unreadCount, addNotification, markAllRead, markRead }}>
       {children}
+      
+      {/* Toast Notification Popup */}
+      {toast && (
+        <div 
+          className="glass animate-fade-in-up" 
+          style={{ 
+            position: 'fixed', 
+            top: '20px', 
+            left: '50%', 
+            transform: 'translateX(-50%)', 
+            zIndex: 9999, 
+            padding: '1rem 1.5rem', 
+            borderRadius: '16px', 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '12px',
+            border: '1px solid var(--primary-color)',
+            minWidth: '320px',
+            maxWidth: '90vw',
+            boxShadow: '0 10px 30px rgba(0,0,0,0.3)'
+          }}
+        >
+          <div style={{ background: 'var(--primary-color)', padding: '8px', borderRadius: '10px', color: 'white' }}>
+            <Bell size={18} />
+          </div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-main)' }}>{toast.title}</div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '2px' }}>{toast.message}</div>
+          </div>
+          <button onClick={() => setToast(null)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
+            <X size={18} />
+          </button>
+        </div>
+      )}
     </NotificationContext.Provider>
   );
 };
