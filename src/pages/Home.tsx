@@ -7,23 +7,29 @@ import { useProperties } from '../contexts/PropertyContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Footer } from '../components/Footer';
 
+
+const FaqItem: React.FC<{ q: string; a: string }> = ({ q, a }) => {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <div style={{ borderBottom: '1px solid var(--border-color)', padding: '1rem 0' }}>
+      <button onClick={() => setOpen(!open)} style={{ width: '100%', background: 'none', border: 'none', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', textAlign: 'left', color: 'var(--text-main)', fontWeight: 600, fontSize: '0.95rem', padding: 0 }}>
+        <span>{q}</span>
+        <span style={{ fontSize: '1.2rem', color: 'var(--primary-color)', flexShrink: 0 }}>{open ? '−' : '+'}</span>
+      </button>
+      {open && <p style={{ margin: '0.75rem 0 0', color: 'var(--text-muted)', fontSize: '0.88rem', lineHeight: 1.7 }}>{a}</p>}
+    </div>
+  );
+};
+
 export const Home: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const { properties } = useProperties();
+  const { properties, agents } = useProperties();
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery) {
-      navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
-    } else {
-      navigate('/search');
-    }
-  };
-
-  const handleCategoryClick = (category: string) => {
-    navigate(`/search?type=${category.toLowerCase()}`);
+    navigate(searchQuery ? `/search?q=${encodeURIComponent(searchQuery)}` : '/search');
   };
 
   return (
@@ -79,52 +85,29 @@ export const Home: React.FC = () => {
               </button>
             </form>
 
-            <div style={{ marginTop: '1rem' }}>
+              <div style={{ marginTop: '1rem' }}>
               <p style={{ fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1rem', color: 'var(--text-muted)' }}>
-                Direct Access: What are you looking for?
+                What are you looking for?
               </p>
-              <div style={{ 
-                display: 'grid', 
-                gridTemplateColumns: window.innerWidth < 768 ? 'repeat(2, 1fr)' : 'repeat(auto-fit, minmax(140px, 1fr))', 
-                gap: '12px',
-                width: '100%'
-              }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', width: '100%' }}>
                 {[
-                  { id: 'room', label: t('cat.rooms'), icon: '🛏️' },
-                  { id: 'master-room', label: t('cat.masterRoom'), icon: '🏡' },
-                  { id: 'house', label: t('cat.fullHouse'), icon: '🏢' },
-                  { id: 'apartment', label: t('cat.apartments'), icon: '🏢' },
-                  { id: 'plot', label: t('cat.plots'), icon: '🗺️' },
-                  { id: 'hall', label: t('cat.halls'), icon: '🎭' }
+                  { id: 'house&intent=buy', label: 'Buy House', icon: '🏠', sub: 'For Sale' },
+                  { id: 'room&intent=rent', label: 'Rent House/Room', icon: '🛏️', sub: 'For Rent' },
+                  { id: 'plot&intent=buy', label: 'Buy Plot', icon: '🗺️', sub: 'Viwanja' },
+                  { id: 'farm&intent=buy', label: 'Buy Farms', icon: '🌾', sub: 'Mashamba' },
+                  { id: 'retail', label: 'Retail Space', icon: '🏪', sub: 'Commercial' },
+                  { id: 'office', label: 'Office Space', icon: '🏢', sub: 'Business' },
                 ].map((cat) => (
-                  <button 
-                    key={cat.id} 
-                    onClick={() => handleCategoryClick(cat.id)}
-                    className="glass-card" 
-                    style={{
-                      padding: '1.2rem 0.75rem',
-                      borderRadius: '16px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '10px',
-                      transition: 'all 0.3s ease',
-                      cursor: 'pointer',
-                      border: '1px solid rgba(255,255,255,0.08)',
-                      background: 'rgba(255,255,255,0.04)',
-                    }}
-                    onMouseOver={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-5px)';
-                      e.currentTarget.style.background = 'rgba(255,255,255,0.08)';
-                    }}
-                    onMouseOut={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
-                    }}
+                  <button
+                    key={cat.id}
+                    onClick={() => navigate(`/search?type=${cat.id}`)}
+                    style={{ padding: '1rem 0.5rem', borderRadius: '14px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', transition: 'all 0.3s ease', cursor: 'pointer', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.05)', color: 'white' }}
+                    onMouseOver={e => { e.currentTarget.style.background = 'rgba(99,102,241,0.3)'; e.currentTarget.style.transform = 'translateY(-4px)'; }}
+                    onMouseOut={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.transform = 'translateY(0)'; }}
                   >
-                    <span style={{ fontSize: '1.75rem' }}>{cat.icon}</span>
-                    <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-main)', textAlign: 'center', lineHeight: 1.2 }}>{cat.label}</span>
+                    <span style={{ fontSize: '1.6rem' }}>{cat.icon}</span>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 700, textAlign: 'center', lineHeight: 1.2 }}>{cat.label}</span>
+                    <span style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,0.5)' }}>{cat.sub}</span>
                   </button>
                 ))}
               </div>
@@ -154,6 +137,114 @@ export const Home: React.FC = () => {
               <Link to="/post" className="btn-primary" style={{ textDecoration: 'none', display: 'inline-block' }}>{t('nav.post')}</Link>
             </div>
           )}
+        </div>
+      </section>
+
+      {/* Popular Neighborhoods */}
+      <section style={{ padding: '3rem 0', background: 'var(--bg-secondary)', borderTop: '1px solid var(--border-color)' }}>
+        <div className="container" style={{ padding: '0 1.5rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+            <div>
+              <h2 style={{ margin: 0 }}>Popular <span className="text-gradient">Neighborhoods</span></h2>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '4px' }}>Most searched neighborhoods</p>
+            </div>
+            <Link to="/search" className="btn-outline" style={{ textDecoration: 'none', fontSize: '0.85rem' }}>View All Locations</Link>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '0.75rem' }}>
+            {[
+              { name: 'Mara', count: 9392 }, { name: 'Mbezi', count: 4758 }, { name: 'Tabata', count: 2756 },
+              { name: 'Goba', count: 2510 }, { name: 'Kigamboni', count: 2273 }, { name: 'Ubungo', count: 1803 },
+              { name: 'Kinondoni', count: 1071 }, { name: 'Mikocheni', count: 997 }, { name: 'Bunju', count: 754 }, { name: 'Sinza', count: 640 },
+            ].map(n => (
+              <Link key={n.name} to={`/search?q=${n.name}`} style={{ textDecoration: 'none' }}>
+                <div className="glass" style={{ padding: '1rem', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', transition: 'all 0.2s ease', border: '1px solid var(--border-color)' }}
+                  onMouseOver={e => (e.currentTarget.style.borderColor = 'var(--primary-color)')}
+                  onMouseOut={e => (e.currentTarget.style.borderColor = 'var(--border-color)')}
+                >
+                  <span style={{ fontWeight: 600, fontSize: '0.9rem', color: 'var(--text-main)' }}>📍 {n.name}</span>
+                  <span style={{ background: 'var(--accent-glow)', color: 'var(--primary-color)', padding: '2px 8px', borderRadius: '10px', fontSize: '0.75rem', fontWeight: 700 }}>{n.count.toLocaleString()}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Top Sellers & Agents */}
+      <section style={{ padding: '3rem 0' }}>
+        <div className="container" style={{ padding: '0 1.5rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+            <div>
+              <h2 style={{ margin: 0 }}>Top <span className="text-gradient">Sellers & Agents</span></h2>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '4px' }}>Most active in the past 14 days</p>
+            </div>
+            <Link to="/search" className="btn-outline" style={{ textDecoration: 'none', fontSize: '0.85rem' }}>View All Sellers</Link>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '1rem' }}>
+            {agents.length > 0 ? agents.slice(0,8).map((agent, i) => (
+              <div key={agent.id} className="glass" style={{ padding: '1rem', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '1rem', border: '1px solid var(--border-color)' }}>
+                <div style={{ width: '44px', height: '44px', borderRadius: '50%', background: `hsl(${i*40},60%,50%)`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 800, fontSize: '1.1rem', flexShrink: 0 }}>{agent.name.charAt(0)}</div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 700, fontSize: '0.9rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{agent.name}</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Real Estate Agent • ⭐ {agent.rating}</div>
+                </div>
+                <span style={{ background: 'rgba(99,102,241,0.1)', color: 'var(--primary-color)', padding: '4px 10px', borderRadius: '10px', fontSize: '0.75rem', fontWeight: 700, flexShrink: 0 }}>{agent.propertiesCount} listings</span>
+              </div>
+            )) : (
+              [{ name: 'dalal_lyimo_kimara', listings: 48, rating: 4.8 }, { name: 'dalali_makini_ubungo', listings: 45, rating: 4.7 },
+               { name: 'dalalimbezibeach_rahimu', listings: 42, rating: 4.9 }, { name: 'big_dealer_kimara', listings: 40, rating: 4.6 },
+               { name: 'dalalichesco_mbezibeach', listings: 39, rating: 4.5 }, { name: 'frankrealtor_tz', listings: 39, rating: 4.8 }].map((a, i) => (
+                <div key={a.name} className="glass" style={{ padding: '1rem', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '1rem', border: '1px solid var(--border-color)' }}>
+                  <div style={{ width: '44px', height: '44px', borderRadius: '50%', background: `hsl(${i*40},60%,50%)`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 800, fontSize: '1.1rem', flexShrink: 0 }}>{a.name.charAt(0).toUpperCase()}</div>
+                  <div style={{ flex: 1, minWidth: 0 }}><div style={{ fontWeight: 700, fontSize: '0.9rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{a.name}</div><div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Real Estate Agent • ⭐ {a.rating}</div></div>
+                  <span style={{ background: 'rgba(99,102,241,0.1)', color: 'var(--primary-color)', padding: '4px 10px', borderRadius: '10px', fontSize: '0.75rem', fontWeight: 700, flexShrink: 0 }}>{a.listings} listings</span>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Popular Regions */}
+      <section style={{ padding: '3rem 0', background: 'var(--bg-secondary)', borderTop: '1px solid var(--border-color)' }}>
+        <div className="container" style={{ padding: '0 1.5rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+            <div><h2 style={{ margin: 0 }}>Popular <span className="text-gradient">Regions</span></h2><p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '4px' }}>Most searched regions in Tanzania</p></div>
+            <Link to="/search" className="btn-outline" style={{ textDecoration: 'none', fontSize: '0.85rem' }}>View All Locations</Link>
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+            {[
+              { name: 'Dar es Salaam', count: 38957 }, { name: 'Dodoma', count: 1350 }, { name: 'Mwanza', count: 1328 },
+              { name: 'Morogoro', count: 587 }, { name: 'Arusha', count: 549 }, { name: 'Mbeya', count: 348 },
+              { name: 'Kilimanjaro', count: 304 }, { name: 'Singida', count: 236 }, { name: 'Ruvuma', count: 174 }, { name: 'Tanga', count: 142 },
+            ].map(r => (
+              <Link key={r.name} to={`/search?q=${r.name}`} style={{ textDecoration: 'none' }}>
+                <div style={{ padding: '0.6rem 1.2rem', borderRadius: '30px', border: '1px solid var(--border-color)', background: 'rgba(255,255,255,0.03)', display: 'flex', alignItems: 'center', gap: '8px', transition: 'all 0.2s' }}
+                  onMouseOver={e => { e.currentTarget.style.borderColor = 'var(--primary-color)'; e.currentTarget.style.color = 'var(--primary-color)'; }}
+                  onMouseOut={e => { e.currentTarget.style.borderColor = 'var(--border-color)'; e.currentTarget.style.color = 'inherit'; }}
+                >
+                  <span style={{ fontWeight: 600, fontSize: '0.88rem' }}>🌍 {r.name}</span>
+                  <span style={{ background: 'rgba(0,0,0,0.15)', padding: '1px 7px', borderRadius: '10px', fontSize: '0.72rem', fontWeight: 700 }}>{r.count.toLocaleString()}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section style={{ padding: '4rem 0' }}>
+        <div className="container" style={{ padding: '0 1.5rem', maxWidth: '800px', margin: '0 auto' }}>
+          <h2 style={{ textAlign: 'center', marginBottom: '0.5rem' }}>Frequently Asked <span className="text-gradient">Questions</span></h2>
+          <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginBottom: '2rem', fontSize: '0.9rem' }}>Get answers to common questions about buying and renting in Tanzania</p>
+          {[
+            { q: 'How do I search for properties on Nyumba?', a: 'Use our search bar to enter your desired location, then filter by property type (house, plot, farm, commercial), listing type (buy or rent), and price range. You can also browse by popular locations.' },
+            { q: 'Is Nyumba free to use?', a: 'Yes! Browsing and searching for properties is completely free. Agents and landlords may have listing packages for premium visibility.' },
+            { q: 'How do I contact a property seller?', a: 'On any property listing, click the "Call" or "WhatsApp" button, or use the built-in "Chat" feature to message the agent directly within the app.' },
+            { q: 'What areas does Nyumba cover?', a: 'We currently cover all major areas in Dar es Salaam including Kinondoni, Ilala, Temeke, Ubungo, and Kigamboni. We are expanding to Arusha, Mwanza, and other regions.' },
+            { q: 'How can I list my property on Nyumba?', a: 'Register as an Agent or Landlord, complete your KYC verification, then click "Post Property" to upload your listing with photos, location, and pricing details.' },
+            { q: 'How does the Visit Booking work?', a: 'Open any property, go to the "Book Visit" tab, select your preferred date and time, and the agent will confirm your visit. You\'ll receive a notification upon confirmation.' },
+          ].map((faq, i) => <FaqItem key={i} q={faq.q} a={faq.a} />)}
         </div>
       </section>
 
