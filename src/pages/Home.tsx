@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, MapPin, Building, X, Zap } from 'lucide-react';
+import { Search, MapPin, Building, X, Zap, Clock, Users, Tag, Target, Smartphone, Globe, CheckCircle } from 'lucide-react';
 import { Navbar } from '../components/Navbar';
 import { PropertyCard } from '../components/PropertyCard';
 import { useProperties } from '../contexts/PropertyContext';
@@ -303,6 +303,86 @@ export const Home: React.FC = () => {
             <h3>{t('home.step3.title')}</h3>
             <p style={{ color: 'var(--text-muted)', marginTop: '0.5rem' }}>{t('home.step3.desc')}</p>
           </div>
+        </div>
+      </section>
+
+      {/* Why Choose Us / Benefits */}
+      <section className="container" style={{ padding: '2rem 0 6rem 0' }}>
+        <h2 style={{ textAlign: 'center', marginBottom: '1rem' }}>Why Choose <span className="text-gradient">Nyumba App?</span></h2>
+        <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginBottom: '3rem', maxWidth: '600px', margin: '0 auto 3rem auto' }}>
+          We are transforming the traditional dalali system into a fast, transparent, and digital experience.
+        </p>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+          {[
+            {
+              icon: <MapPin size={24} color="white" />,
+              title: "Easy Access to Properties",
+              desc: "Houses, rooms, and plots available instantly. No need to walk around physically.",
+              highlight: "Saves time and transport costs"
+            },
+            {
+              icon: <Globe size={24} color="white" />,
+              title: "Wide Variety of Listings",
+              desc: "Covers many locations, especially Dar es Salaam, with different price ranges.",
+              highlight: "Good for different budgets"
+            },
+            {
+              icon: <CheckCircle size={24} color="white" />,
+              title: "Simple to Use",
+              desc: "Basic interface with no complicated steps.",
+              highlight: "Even for low tech skills"
+            },
+            {
+              icon: <Clock size={24} color="white" />,
+              title: "Fast Posting for Sellers",
+              desc: "Agents and owners can upload properties quickly and easily.",
+              highlight: "Encourages many listings"
+            },
+            {
+              icon: <Users size={24} color="white" />,
+              title: "Large Audience Reach",
+              desc: "Properties get seen by many people online instantly.",
+              highlight: "Better exposure than traditional"
+            },
+            {
+              icon: <Tag size={24} color="white" />,
+              title: "Free or Low Cost",
+              desc: "Often cheaper than hiring agents traditionally.",
+              highlight: "Attractive to buyers & sellers"
+            },
+            {
+              icon: <Target size={24} color="white" />,
+              title: "Central Marketplace",
+              desc: "Brings buyers and sellers directly into one unified place.",
+              highlight: "Reduces search randomness"
+            },
+            {
+              icon: <Smartphone size={24} color="white" />,
+              title: "Mobile Friendly",
+              desc: "Works perfectly on all phones, which is crucial in Tanzania.",
+              highlight: "Accessible to majority"
+            },
+            {
+              icon: <Zap size={24} color="white" />,
+              title: "Real Estate Digitization",
+              desc: "Moves the housing search process from offline completely online.",
+              highlight: "Important step for tech growth"
+            }
+          ].map((benefit, i) => (
+            <div key={i} className="glass" style={{ padding: '1.5rem', borderRadius: '16px', display: 'flex', flexDirection: 'column', transition: 'transform 0.2s', borderLeft: '4px solid var(--primary-color)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '1rem' }}>
+                <div style={{ background: 'var(--primary-color)', padding: '10px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {benefit.icon}
+                </div>
+                <h3 style={{ margin: 0, fontSize: '1.1rem' }}>{benefit.title}</h3>
+              </div>
+              <p style={{ color: 'var(--text-main)', fontSize: '0.9rem', marginBottom: '1rem', flex: 1 }}>{benefit.desc}</p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: '#10b981', background: 'rgba(16,185,129,0.1)', padding: '6px 12px', borderRadius: '20px', width: 'fit-content', fontWeight: 600 }}>
+                👉 {benefit.highlight}
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
