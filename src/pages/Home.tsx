@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, MapPin, Building, X, Zap, Clock, Layers, Smartphone, UploadCloud, Globe, PiggyBank, Crosshair, TrendingUp, CheckCircle } from 'lucide-react';
+import { Search, MapPin, Building, X, Zap, Clock, Layers, Smartphone, UploadCloud, Globe, PiggyBank, Crosshair, TrendingUp, CheckCircle, ShieldAlert, ShieldCheck } from 'lucide-react';
 import { Navbar } from '../components/Navbar';
 import { PropertyCard } from '../components/PropertyCard';
 import { useProperties } from '../contexts/PropertyContext';
@@ -304,6 +304,77 @@ export const Home: React.FC = () => {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* The Problem We Solve (Old Way vs Nyumba Way) */}
+      <section style={{ padding: '5rem 0', background: 'var(--bg-secondary)', borderTop: '1px solid var(--border-color)', borderBottom: '1px solid var(--border-color)' }}>
+        <div className="container" style={{ padding: '0 1.5rem' }}>
+          <div style={{ textAlign: 'center', marginBottom: '3rem', maxWidth: '800px', margin: '0 auto 3rem' }}>
+            <h2 style={{ marginBottom: '1rem' }}>We Fixed the Broken System</h2>
+            <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem' }}>
+              Traditional property hunting in Tanzania lacks trust, transparency, and security. We built <span className="text-gradient" style={{ fontWeight: 800 }}>Nyumba</span> to be the complete, secure solution you deserve.
+            </p>
+          </div>
+          
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
+            
+            {/* The Old Way (Competitors/Traditional) */}
+            <div className="glass" style={{ padding: '2rem', borderRadius: 'var(--border-radius-lg)', borderTop: '4px solid #ef4444' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '1.5rem' }}>
+                <div style={{ background: '#ef444420', padding: '12px', borderRadius: '12px' }}><ShieldAlert size={28} color="#ef4444" /></div>
+                <h3 style={{ margin: 0, fontSize: '1.5rem' }}>The Old Way</h3>
+              </div>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {[
+                  { title: 'No Verification', desc: 'Anyone can post. High risk of scams and fake ads.' },
+                  { title: 'Dalali Dependency', desc: 'Hidden fees, duplicate listings, and high broker reliance.' },
+                  { title: 'Poor Communication', desc: 'Forced to use phone calls or WhatsApp outside the platform.' },
+                  { title: 'Inaccurate Locations', desc: 'No GPS. Just general area names making comparison hard.' },
+                  { title: 'Zero Accountability', desc: 'No ratings or reviews for agents or landlords.' },
+                  { title: 'Insecure Transactions', desc: 'Everything happens offline with no protection.' },
+                  { title: 'Limited Innovation', desc: 'Just a basic "listing board" that doesn\'t hold user attention.' }
+                ].map((item, idx) => (
+                  <li key={idx} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                    <X size={20} color="#ef4444" style={{ flexShrink: 0, marginTop: '2px' }} />
+                    <div>
+                      <strong style={{ display: 'block', color: 'var(--text-main)', fontSize: '0.95rem' }}>{item.title}</strong>
+                      <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>{item.desc}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* The Nyumba Way */}
+            <div className="glass" style={{ padding: '2rem', borderRadius: 'var(--border-radius-lg)', borderTop: '4px solid #10b981', position: 'relative', overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', top: '-20px', right: '-20px', width: '150px', height: '150px', background: 'var(--primary-color)', opacity: 0.1, filter: 'blur(40px)', borderRadius: '50%' }}></div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '1.5rem' }}>
+                <div style={{ background: '#10b98120', padding: '12px', borderRadius: '12px' }}><ShieldCheck size={28} color="#10b981" /></div>
+                <h3 style={{ margin: 0, fontSize: '1.5rem' }}>The Nyumba Way</h3>
+              </div>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {[
+                  { title: 'Strong Verification', desc: 'Verified owners and agents with anti-scam protection.' },
+                  { title: 'Direct Transparency', desc: 'Direct connections with real owners and clean, unique listings.' },
+                  { title: 'In-App Ecosystem', desc: 'Built-in chat, digital bookings, and secure scheduling.' },
+                  { title: 'Precise GPS Tracking', desc: 'Exact locations on an interactive map for easy comparison.' },
+                  { title: 'Community Ratings', desc: 'Rate and review agents/sellers for complete accountability.' },
+                  { title: 'Secure Transactions', desc: 'In-app escrow support to protect your money.' },
+                  { title: 'Smart Search Intelligence', desc: 'AI-driven recommendations tailored to your budget.' }
+                ].map((item, idx) => (
+                  <li key={idx} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                    <CheckCircle size={20} color="#10b981" style={{ flexShrink: 0, marginTop: '2px' }} />
+                    <div>
+                      <strong style={{ display: 'block', color: 'var(--text-main)', fontSize: '0.95rem' }}>{item.title}</strong>
+                      <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>{item.desc}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
           </div>
         </div>
       </section>
