@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Navbar } from '../components/Navbar';
 import { Users, Home as HomeIcon, AlertTriangle, CheckCircle, XCircle, TrendingUp, Eye, Shield } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { mockProperties } from '../mockData/properties';
+
 
 interface UserRecord {
   id: string;
@@ -36,7 +36,10 @@ const mockFraudAlerts: FraudAlert[] = [
   { id: 'f3', user: 'Peter M.', reason: 'Listing price 90% below area average', severity: 'medium', date: 'Yesterday 3:20 PM' },
 ];
 
+import { useProperties } from '../contexts/PropertyContext';
+
 export const AdminDashboard: React.FC = () => {
+  const { properties } = useProperties();
   const [activeTab, setActiveTab] = useState<'overview' | 'users' | 'listings' | 'fraud'>('overview');
   const [users, setUsers] = useState(mockUsers);
   const { t } = useLanguage();
@@ -47,7 +50,7 @@ export const AdminDashboard: React.FC = () => {
 
   const stats = [
     { label: t('admin.totalUsers'), value: users.length, icon: <Users size={24} />, color: '#10b981' },
-    { label: t('admin.activeListings'), value: mockProperties.length, icon: <HomeIcon size={24} />, color: '#3b82f6' },
+    { label: t('admin.activeListings'), value: properties.length, icon: <HomeIcon size={24} />, color: '#3b82f6' },
     { label: t('admin.fraudAlerts'), value: mockFraudAlerts.filter(f => f.severity === 'high').length, icon: <AlertTriangle size={24} />, color: '#ef4444' },
     { label: t('admin.pendingKyc'), value: users.filter(u => u.status === 'pending').length, icon: <Shield size={24} />, color: '#f59e0b' },
   ];

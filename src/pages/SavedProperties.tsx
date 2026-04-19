@@ -3,10 +3,11 @@ import { Navbar } from '../components/Navbar';
 import { PropertyCard } from '../components/PropertyCard';
 import { Trash2, Bookmark, Home as HomeIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { mockProperties } from '../mockData/properties';
+import { useProperties } from '../contexts/PropertyContext';
 import type { Property } from '../mockData/properties';
 
 export const SavedProperties: React.FC = () => {
+  const { properties } = useProperties();
   const [savedIds, setSavedIds] = useState<string[]>([]);
   const [savedProperties, setSavedProperties] = useState<Property[]>([]);
 
@@ -16,8 +17,8 @@ export const SavedProperties: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    setSavedProperties(mockProperties.filter(p => savedIds.includes(p.id)));
-  }, [savedIds]);
+    setSavedProperties(properties.filter(p => savedIds.includes(p.id)));
+  }, [savedIds, properties]);
 
   const removeSaved = (id: string) => {
     const updated = savedIds.filter(sid => sid !== id);
