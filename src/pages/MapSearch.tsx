@@ -217,12 +217,12 @@ export const MapSearch: React.FC = () => {
                 style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', background: 'rgba(255,255,255,0.03)', color: 'var(--text-main)', border: '1px solid var(--border-color)', fontSize: '0.85rem', marginBottom: '8px' }}
               >
                 <option value="">All Categories</option>
-                <option value="room">Single Room</option>
-                <option value="master-room">Master Room</option>
-                <option value="house">Full House</option>
-                <option value="apartment">Apartments</option>
-                <option value="plot">Compounds / Kiwanja</option>
-                <option value="hall">Halls / Ukumbi</option>
+                <option value="house">Buy House (For Sale)</option>
+                <option value="room">Rent House/Room (For Rent)</option>
+                <option value="plot">Buy Plot (Viwanja)</option>
+                <option value="farm">Buy Farms (Mashamba)</option>
+                <option value="retail">Retail Space (Commercial)</option>
+                <option value="office">Office Space (Business)</option>
               </select>
               <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
                 <select 

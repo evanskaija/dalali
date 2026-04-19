@@ -32,7 +32,7 @@ export interface Property {
   description?: string;
   price: number;
   location: string;
-  type: 'apartment' | 'house' | 'room' | 'master-room' | 'plot' | 'hall';
+  type: 'apartment' | 'house' | 'room' | 'master-room' | 'plot' | 'hall' | 'farm' | 'retail' | 'office';
   bedrooms: number;
   bathrooms: number;
   images: string[];

@@ -88,12 +88,12 @@ export const AddProperty: React.FC = () => {
   };
 
   const categories = [
-    { id: 'room', label: 'Single Room', icon: '🛏️' },
-    { id: 'master-room', label: 'Master Room', icon: '🏡' },
-    { id: 'house', label: 'Full House', icon: '🏢' },
-    { id: 'apartment', label: 'Apartments', icon: '🏢' },
-    { id: 'plot', label: 'Compounds / Kiwanja', icon: '🗺️' },
-    { id: 'hall', label: 'Halls / Ukumbi', icon: '🎭' }
+    { id: 'house', label: 'Buy House', icon: '🏠', sub: 'For Sale' },
+    { id: 'room', label: 'Rent House/Room', icon: '🛏️', sub: 'For Rent' },
+    { id: 'plot', label: 'Buy Plot', icon: '🗺️', sub: 'Viwanja' },
+    { id: 'farm', label: 'Buy Farms', icon: '🌾', sub: 'Mashamba' },
+    { id: 'retail', label: 'Retail Space', icon: '🏪', sub: 'Commercial' },
+    { id: 'office', label: 'Office Space', icon: '🏢', sub: 'Business' }
   ];
 
   const [amenities, setAmenities] = useState({
@@ -423,17 +423,17 @@ export const AddProperty: React.FC = () => {
                       <div>
                         <label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: 600, fontSize: '0.85rem' }}>Unit Type</label>
                         <select value={unit.roomType} onChange={(e) => updateUnit(unit.id, 'roomType', e.target.value)} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--bg-color)', color: 'white' }}>
-                          <option value="room">Single Room</option>
-                          <option value="master-room">Master Room</option>
-                          <option value="house">Full House</option>
-                          <option value="apartment">Apartments</option>
-                          <option value="plot">Compounds / Kiwanja</option>
-                          <option value="hall">Halls / Ukumbi</option>
+                          <option value="house">Buy House (For Sale)</option>
+                          <option value="room">Rent House/Room (For Rent)</option>
+                          <option value="plot">Buy Plot (Viwanja)</option>
+                          <option value="farm">Buy Farms (Mashamba)</option>
+                          <option value="retail">Retail Space (Commercial)</option>
+                          <option value="office">Office Space (Business)</option>
                         </select>
                       </div>
                     </div>
 
-                    {unit.roomType !== 'plot' && unit.roomType !== 'hall' && (
+                    {unit.roomType !== 'plot' && unit.roomType !== 'farm' && unit.roomType !== 'hall' && (
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
                         <div>
                           <label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: 600, fontSize: '0.85rem' }}>Bedrooms</label>
@@ -460,9 +460,9 @@ export const AddProperty: React.FC = () => {
                             <input type="number" value={unit.capacity} onChange={(e) => updateUnit(unit.id, 'capacity', Number(e.target.value))} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'rgba(255,255,255,0.03)', color: 'white' }} />
                           </div>
                         </div>
-                      ) : unit.roomType === 'plot' ? (
+                      ) : (unit.roomType === 'plot' || unit.roomType === 'farm') ? (
                         <div>
-                          <label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: 600, fontSize: '0.85rem' }}>Measurements (e.g. 20m x 30m)</label>
+                          <label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: 600, fontSize: '0.85rem' }}>Measurements / Size (e.g. 20m x 30m or 5 Acres)</label>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                             <Maximize2 size={18} color="var(--text-muted)" />
                             <input type="text" value={unit.measurements} onChange={(e) => updateUnit(unit.id, 'measurements', e.target.value)} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'rgba(255,255,255,0.03)', color: 'white' }} />
@@ -480,7 +480,7 @@ export const AddProperty: React.FC = () => {
                     <div style={{ background: 'rgba(16,185,129,0.05)', padding: '1rem', borderRadius: '8px', marginBottom: '1.5rem' }}>
                       <p style={{ margin: '0 0 1rem 0', fontSize: '0.8rem', fontWeight: 700, color: 'var(--primary-color)', textTransform: 'uppercase' }}>Building Specifications</p>
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem' }}>
-                        {unit.roomType !== 'plot' && (
+                        {unit.roomType !== 'plot' && unit.roomType !== 'farm' && (
                           <>
                             <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.85rem' }}>
                               <input type="checkbox" checked={unit.aluminumWindows} onChange={(e) => updateUnit(unit.id, 'aluminumWindows', e.target.checked)} /> Aluminum Windows
@@ -501,7 +501,7 @@ export const AddProperty: React.FC = () => {
                             <input type="checkbox" checked={unit.soundSystem} onChange={(e) => updateUnit(unit.id, 'soundSystem', e.target.checked)} /> Sound System
                           </label>
                         )}
-                        {(unit.roomType === 'house' || unit.roomType === 'apartment' || unit.roomType === 'hall') && (
+                        {(unit.roomType === 'house' || unit.roomType === 'apartment' || unit.roomType === 'room' || unit.roomType === 'office') && (
                           <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.85rem' }}>
                             <input type="checkbox" checked={unit.kitchen} onChange={(e) => updateUnit(unit.id, 'kitchen', e.target.checked)} /> Kitchen Area
                           </label>

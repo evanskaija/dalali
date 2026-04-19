@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Navbar } from '../components/Navbar';
 import { DAR_LOCATIONS } from '../mockData/locations';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Search, MapPin, ChevronRight, Home, Building, LayoutGrid, Map as MapIcon, Theater, BedDouble } from 'lucide-react';
+import { Search, MapPin, ChevronRight, Home, Building, LayoutGrid, Map as MapIcon, BedDouble } from 'lucide-react';
 
 export const SearchPortal: React.FC = () => {
   const [step, setStep] = useState(1);
@@ -13,12 +13,12 @@ export const SearchPortal: React.FC = () => {
   const { t, language } = useLanguage();
 
   const categories = [
-    { id: 'room', label: t('cat.rooms'), icon: <BedDouble size={24} />, description: language === 'en' ? 'Private room in a shared compound' : 'Chumba binafsi kwenye fensi' },
-    { id: 'master-room', label: t('cat.masterRoom'), icon: <Home size={24} />, description: language === 'en' ? 'Ensuite room with private bath' : 'Chumba chenye choo ndani' },
-    { id: 'house', label: t('cat.fullHouse'), icon: <Building size={24} />, description: language === 'en' ? 'Entire house for families' : 'Nyumba nzima kwa ajili ya familia' },
-    { id: 'apartment', label: t('cat.apartments'), icon: <LayoutGrid size={24} />, description: language === 'en' ? 'Modern multi-unit complexes' : 'Majengo ya kisasa ya kupanga' },
-    { id: 'plot', label: t('cat.plots'), icon: <MapIcon size={24} />, description: language === 'en' ? 'Open land and development plots' : 'Viwanja na maeneo ya wazi' },
-    { id: 'hall', label: t('cat.halls'), icon: <Theater size={24} />, description: language === 'en' ? 'Spaces for events and functions' : 'Kumbi kwa ajili ya sherehe' }
+    { id: 'house', label: t('cat.house'), icon: <Building size={24} />, description: language === 'en' ? 'For Sale' : 'Nyumba ya Kununua' },
+    { id: 'room', label: t('cat.room'), icon: <BedDouble size={24} />, description: language === 'en' ? 'For Rent' : 'Nyumba/Chumba cha Kupanga' },
+    { id: 'plot', label: t('cat.plots'), icon: <MapIcon size={24} />, description: language === 'en' ? 'Viwanja' : 'Viwanja (Plots)' },
+    { id: 'farm', label: t('cat.farms'), icon: <LayoutGrid size={24} />, description: language === 'en' ? 'Mashamba' : 'Mashamba (Farms)' },
+    { id: 'retail', label: t('cat.retail'), icon: <Home size={24} />, description: language === 'en' ? 'Commercial' : 'Biashara (Commercial)' },
+    { id: 'office', label: t('cat.office'), icon: <LayoutGrid size={24} />, description: language === 'en' ? 'Business' : 'Ofisi (Business)' }
   ];
 
 

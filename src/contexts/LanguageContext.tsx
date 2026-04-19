@@ -25,12 +25,12 @@ const translations: Translations = {
   'hero.addedToday': { en: 'Homes added today', sw: 'Nyumba zilizowekwa leo' },
 
   // Categories
-  'cat.fullHouse': { en: 'Full House', sw: 'Nyumba Nzima' },
-  'cat.apartments': { en: 'Apartments', sw: 'Apartmenti' },
-  'cat.rooms': { en: 'Single Room', sw: 'Chumba Kimoja' },
-  'cat.masterRoom': { en: 'Master Room', sw: 'Chumba Kikubwa' },
-  'cat.plots': { en: 'Compounds / Kiwanja', sw: 'Viwanja' },
-  'cat.halls': { en: 'Halls / Ukumbi', sw: 'Kumbi za Sherehe' },
+  'cat.house': { en: 'Buy House', sw: 'Nyumba (Kwa Sale)' },
+  'cat.room': { en: 'Rent House/Room', sw: 'Kupanga (Rent)' },
+  'cat.plots': { en: 'Buy Plot', sw: 'Viwanja (Plots)' },
+  'cat.farms': { en: 'Buy Farms', sw: 'Mashamba (Farms)' },
+  'cat.retail': { en: 'Retail Space', sw: 'Biashara (Commercial)' },
+  'cat.office': { en: 'Office Space', sw: 'Ofisi (Business)' },
 
   // Sections
   'home.nearby': { en: 'Nearby Properties', sw: 'Nyumba Zilizo Karibu' },
