@@ -170,7 +170,7 @@ export const Home: React.FC = () => {
             </div>
           </div>
           {properties.length > 0 ? (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
               {properties.slice(0, 3).map((p, i) => {
                 const scores = [98, 94, 91];
                 const reasons = ['Matches your budget', 'Near your searched area', 'Popular this week'];
@@ -243,7 +243,7 @@ export const Home: React.FC = () => {
       <section style={{ padding: '3rem 0', background: 'rgba(255,255,255,0.02)', borderTop: '1px solid var(--border-color)' }}>
         <div className="container" style={{ padding: '0 1.5rem' }}>
           <h2 style={{ marginBottom: '1.5rem' }}>{t('home.reviews')}</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
             {[
               { name: 'Amina J.', rating: 5, text: 'Dalali app imenisaidia kupata chumba kwa muda mfupi sana. GPS system ni bora!', location: 'Kijitonyama' },
               { name: 'Peter M.', rating: 5, text: 'The escrow payment system gave me confidence. I paid and moved in safely.', location: 'Mikocheni' },

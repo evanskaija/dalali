@@ -84,7 +84,7 @@ export const AdminDashboard: React.FC = () => {
         </div>
 
         {/* Stats */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', marginBottom: '2rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
           {stats.map((s, i) => (
             <div key={i} className="glass" style={{ padding: '1.5rem', borderRadius: 'var(--border-radius)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <div style={{ background: s.color + '20', color: s.color, padding: '0.75rem', borderRadius: '12px' }}>{s.icon}</div>
@@ -97,7 +97,7 @@ export const AdminDashboard: React.FC = () => {
         </div>
 
         {/* Tabs */}
-        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', background: 'rgba(255,255,255,0.03)', padding: '0.4rem', borderRadius: '10px', width: 'fit-content' }}>
+        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', background: 'rgba(255,255,255,0.03)', padding: '0.4rem', borderRadius: '10px', width: '100%', overflowX: 'auto', whiteSpace: 'nowrap' }}>
           {(['overview', 'users', 'listings', 'fraud'] as const).map(tab => (
             <button key={tab} style={tabStyle(tab)} onClick={() => setActiveTab(tab)}>
               {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -107,7 +107,7 @@ export const AdminDashboard: React.FC = () => {
 
         {/* Users Table */}
         {activeTab === 'users' && (
-          <div className="glass" style={{ borderRadius: 'var(--border-radius)', overflow: 'hidden' }}>
+          <div className="glass" style={{ borderRadius: 'var(--border-radius)', overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--border-color)', background: 'rgba(255,255,255,0.03)' }}>
@@ -159,7 +159,7 @@ export const AdminDashboard: React.FC = () => {
 
         {/* Overview */}
         {activeTab === 'overview' && (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
             <div className="glass" style={{ padding: '1.5rem', borderRadius: 'var(--border-radius)' }}>
               <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><TrendingUp size={20} color="var(--primary-color)" /> Platform Health</h3>
               {[
