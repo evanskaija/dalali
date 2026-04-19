@@ -25,12 +25,18 @@ const translations: Translations = {
   'hero.addedToday': { en: 'Homes added today', sw: 'Nyumba zilizowekwa leo' },
 
   // Categories
-  'cat.house': { en: 'Buy House', sw: 'Nyumba (Kwa Sale)' },
-  'cat.room': { en: 'Rent House/Room', sw: 'Kupanga (Rent)' },
-  'cat.plots': { en: 'Buy Plot', sw: 'Viwanja (Plots)' },
-  'cat.farms': { en: 'Buy Farms', sw: 'Mashamba (Farms)' },
-  'cat.retail': { en: 'Retail Space', sw: 'Biashara (Commercial)' },
-  'cat.office': { en: 'Office Space', sw: 'Ofisi (Business)' },
+  'cat.house': { en: 'Buy House', sw: 'Nyumba' },
+  'cat.room': { en: 'Rent House/Room', sw: 'Kupanga' },
+  'cat.plots': { en: 'Buy Plot', sw: 'Viwanja' },
+  'cat.farms': { en: 'Buy Farms', sw: 'Mashamba' },
+  'cat.retail': { en: 'Retail Space', sw: 'Biashara' },
+  'cat.office': { en: 'Office Space', sw: 'Ofisi' },
+  'cat.sub.sale': { en: 'For Sale', sw: 'Kwa Sale' },
+  'cat.sub.rent': { en: 'For Rent', sw: 'Ya Kupanga' },
+  'cat.sub.plots': { en: 'Viwanja', sw: 'Viwanja' },
+  'cat.sub.farms': { en: 'Mashamba', sw: 'Mashamba' },
+  'cat.sub.commercial': { en: 'Commercial', sw: 'Biashara' },
+  'cat.sub.business': { en: 'Business', sw: 'Ofisi' },
 
   // Sections
   'home.nearby': { en: 'Nearby Properties', sw: 'Nyumba Zilizo Karibu' },

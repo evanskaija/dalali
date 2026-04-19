@@ -91,12 +91,12 @@ export const Home: React.FC = () => {
               </p>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', width: '100%' }}>
                 {[
-                  { id: 'house&intent=buy', label: 'Buy House', icon: '🏠', sub: 'For Sale', bg: 'rgba(59,130,246,0.4)', border: 'rgba(59,130,246,0.6)', hover: 'rgba(59,130,246,0.6)' },
-                  { id: 'room&intent=rent', label: 'Rent House/Room', icon: '🛏️', sub: 'For Rent', bg: 'rgba(16,185,129,0.4)', border: 'rgba(16,185,129,0.6)', hover: 'rgba(16,185,129,0.6)' },
-                  { id: 'plot&intent=buy', label: 'Buy Plot', icon: '🗺️', sub: 'Viwanja', bg: 'rgba(245,158,11,0.4)', border: 'rgba(245,158,11,0.6)', hover: 'rgba(245,158,11,0.6)' },
-                  { id: 'farm&intent=buy', label: 'Buy Farms', icon: '🌾', sub: 'Mashamba', bg: 'rgba(139,92,246,0.4)', border: 'rgba(139,92,246,0.6)', hover: 'rgba(139,92,246,0.6)' },
-                  { id: 'retail', label: 'Retail Space', icon: '🏪', sub: 'Commercial', bg: 'rgba(236,72,153,0.4)', border: 'rgba(236,72,153,0.6)', hover: 'rgba(236,72,153,0.6)' },
-                  { id: 'office', label: 'Office Space', icon: '🏢', sub: 'Business', bg: 'rgba(14,165,233,0.4)', border: 'rgba(14,165,233,0.6)', hover: 'rgba(14,165,233,0.6)' },
+                  { id: 'house&intent=buy', label: t('cat.house'), icon: '🏠', sub: t('cat.sub.sale'), bg: 'rgba(59,130,246,0.4)', border: 'rgba(59,130,246,0.6)', hover: 'rgba(59,130,246,0.6)' },
+                  { id: 'room&intent=rent', label: t('cat.room'), icon: '🛏️', sub: t('cat.sub.rent'), bg: 'rgba(16,185,129,0.4)', border: 'rgba(16,185,129,0.6)', hover: 'rgba(16,185,129,0.6)' },
+                  { id: 'plot&intent=buy', label: t('cat.plots'), icon: '🗺️', sub: t('cat.sub.plots'), bg: 'rgba(245,158,11,0.4)', border: 'rgba(245,158,11,0.6)', hover: 'rgba(245,158,11,0.6)' },
+                  { id: 'farm&intent=buy', label: t('cat.farms'), icon: '🌾', sub: t('cat.sub.farms'), bg: 'rgba(139,92,246,0.4)', border: 'rgba(139,92,246,0.6)', hover: 'rgba(139,92,246,0.6)' },
+                  { id: 'retail', label: t('cat.retail'), icon: '🏪', sub: t('cat.sub.commercial'), bg: 'rgba(236,72,153,0.4)', border: 'rgba(236,72,153,0.6)', hover: 'rgba(236,72,153,0.6)' },
+                  { id: 'office', label: t('cat.office'), icon: '🏢', sub: t('cat.sub.business'), bg: 'rgba(14,165,233,0.4)', border: 'rgba(14,165,233,0.6)', hover: 'rgba(14,165,233,0.6)' },
                 ].map((cat) => (
                   <button
                     key={cat.id}

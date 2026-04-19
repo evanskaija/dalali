@@ -13,12 +13,12 @@ export const SearchPortal: React.FC = () => {
   const { t, language } = useLanguage();
 
   const categories = [
-    { id: 'house', label: t('cat.house'), icon: <Building size={24} />, description: language === 'en' ? 'For Sale' : 'Nyumba ya Kununua' },
-    { id: 'room', label: t('cat.room'), icon: <BedDouble size={24} />, description: language === 'en' ? 'For Rent' : 'Nyumba/Chumba cha Kupanga' },
-    { id: 'plot', label: t('cat.plots'), icon: <MapIcon size={24} />, description: language === 'en' ? 'Viwanja' : 'Viwanja (Plots)' },
-    { id: 'farm', label: t('cat.farms'), icon: <LayoutGrid size={24} />, description: language === 'en' ? 'Mashamba' : 'Mashamba (Farms)' },
-    { id: 'retail', label: t('cat.retail'), icon: <Home size={24} />, description: language === 'en' ? 'Commercial' : 'Biashara (Commercial)' },
-    { id: 'office', label: t('cat.office'), icon: <LayoutGrid size={24} />, description: language === 'en' ? 'Business' : 'Ofisi (Business)' }
+    { id: 'house', label: t('cat.house'), icon: <Building size={24} />, description: t('cat.sub.sale') },
+    { id: 'room', label: t('cat.room'), icon: <BedDouble size={24} />, description: t('cat.sub.rent') },
+    { id: 'plot', label: t('cat.plots'), icon: <MapIcon size={24} />, description: t('cat.sub.plots') },
+    { id: 'farm', label: t('cat.farms'), icon: <LayoutGrid size={24} />, description: t('cat.sub.farms') },
+    { id: 'retail', label: t('cat.retail'), icon: <Home size={24} />, description: t('cat.sub.commercial') },
+    { id: 'office', label: t('cat.office'), icon: <LayoutGrid size={24} />, description: t('cat.sub.business') }
   ];
 
 

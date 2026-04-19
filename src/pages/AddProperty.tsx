@@ -8,6 +8,7 @@ import { ImageCropper } from '../components/ImageCropper';
 import { useProperties } from '../contexts/PropertyContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useNotifications } from '../contexts/NotificationContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import type { Property } from '../mockData/properties';
 import { compressImage } from '../utils/db';
 import { DAR_LOCATIONS } from '../mockData/locations';
@@ -55,6 +56,7 @@ export const AddProperty: React.FC = () => {
   const { addProperty } = useProperties();
   const { addNotification } = useNotifications();
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [loadingLocation, setLoadingLocation] = useState(false);
   const [isCompressing, setIsCompressing] = useState(false);
   const [position, setPosition] = useState<[number, number] | null>(null);
@@ -88,12 +90,12 @@ export const AddProperty: React.FC = () => {
   };
 
   const categories = [
-    { id: 'house', label: 'Buy House', icon: '🏠', sub: 'For Sale' },
-    { id: 'room', label: 'Rent House/Room', icon: '🛏️', sub: 'For Rent' },
-    { id: 'plot', label: 'Buy Plot', icon: '🗺️', sub: 'Viwanja' },
-    { id: 'farm', label: 'Buy Farms', icon: '🌾', sub: 'Mashamba' },
-    { id: 'retail', label: 'Retail Space', icon: '🏪', sub: 'Commercial' },
-    { id: 'office', label: 'Office Space', icon: '🏢', sub: 'Business' }
+    { id: 'house', label: t('cat.house'), icon: '🏠', sub: t('cat.sub.sale') },
+    { id: 'room', label: t('cat.room'), icon: '🛏️', sub: t('cat.sub.rent') },
+    { id: 'plot', label: t('cat.plots'), icon: '🗺️', sub: t('cat.sub.plots') },
+    { id: 'farm', label: t('cat.farms'), icon: '🌾', sub: t('cat.sub.farms') },
+    { id: 'retail', label: t('cat.retail'), icon: '🏪', sub: t('cat.sub.commercial') },
+    { id: 'office', label: t('cat.office'), icon: '🏢', sub: t('cat.sub.business') }
   ];
 
   const [amenities, setAmenities] = useState({
@@ -423,12 +425,12 @@ export const AddProperty: React.FC = () => {
                       <div>
                         <label style={{ display: 'block', marginBottom: '0.4rem', fontWeight: 600, fontSize: '0.85rem' }}>Unit Type</label>
                         <select value={unit.roomType} onChange={(e) => updateUnit(unit.id, 'roomType', e.target.value)} style={{ width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'var(--bg-color)', color: 'white' }}>
-                          <option value="house">Buy House (For Sale)</option>
-                          <option value="room">Rent House/Room (For Rent)</option>
-                          <option value="plot">Buy Plot (Viwanja)</option>
-                          <option value="farm">Buy Farms (Mashamba)</option>
-                          <option value="retail">Retail Space (Commercial)</option>
-                          <option value="office">Office Space (Business)</option>
+                          <option value="house">{t('cat.house')} ({t('cat.sub.sale')})</option>
+                          <option value="room">{t('cat.room')} ({t('cat.sub.rent')})</option>
+                          <option value="plot">{t('cat.plots')} ({t('cat.sub.plots')})</option>
+                          <option value="farm">{t('cat.farms')} ({t('cat.sub.farms')})</option>
+                          <option value="retail">{t('cat.retail')} ({t('cat.sub.commercial')})</option>
+                          <option value="office">{t('cat.office')} ({t('cat.sub.business')})</option>
                         </select>
                       </div>
                     </div>

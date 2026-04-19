@@ -216,13 +216,13 @@ export const MapSearch: React.FC = () => {
                 }}
                 style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', background: 'rgba(255,255,255,0.03)', color: 'var(--text-main)', border: '1px solid var(--border-color)', fontSize: '0.85rem', marginBottom: '8px' }}
               >
-                <option value="">All Categories</option>
-                <option value="house">Buy House (For Sale)</option>
-                <option value="room">Rent House/Room (For Rent)</option>
-                <option value="plot">Buy Plot (Viwanja)</option>
-                <option value="farm">Buy Farms (Mashamba)</option>
-                <option value="retail">Retail Space (Commercial)</option>
-                <option value="office">Office Space (Business)</option>
+                <option value="">{t('map.all')}</option>
+                <option value="house">{t('cat.house')} ({t('cat.sub.sale')})</option>
+                <option value="room">{t('cat.room')} ({t('cat.sub.rent')})</option>
+                <option value="plot">{t('cat.plots')} ({t('cat.sub.plots')})</option>
+                <option value="farm">{t('cat.farms')} ({t('cat.sub.farms')})</option>
+                <option value="retail">{t('cat.retail')} ({t('cat.sub.commercial')})</option>
+                <option value="office">{t('cat.office')} ({t('cat.sub.business')})</option>
               </select>
               <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
                 <select 
