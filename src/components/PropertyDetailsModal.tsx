@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import type { Property } from '../mockData/properties';
 import { useProperties } from '../contexts/PropertyContext';
 import { useAuth } from '../contexts/AuthContext';
-import { X, MapPin, BedDouble, Bath, Car, ChevronLeft, ChevronRight, Video, Phone, MessageCircle, MessageSquare, Zap, Shield, Droplets, CheckCircle, Maximize2, Users as UsersIcon } from 'lucide-react';
+import { X, MapPin, BedDouble, Bath, Car, ChevronLeft, ChevronRight, Video, Phone, MessageCircle, MessageSquare, Zap, Droplets, CheckCircle, Maximize2, Users as UsersIcon } from 'lucide-react';
 
 interface Props {
   property: Property;

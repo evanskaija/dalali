@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Property } from '../mockData/properties';
-import { MapPin, BedDouble, Bath, Car, Camera, Video, Bookmark, Mail, MessageSquare, MessageCircle, Phone, Maximize2 } from 'lucide-react';
+import { MapPin, BedDouble, Bath, Car, Camera, Video, Bookmark, MessageSquare, MessageCircle, Phone, Maximize2 } from 'lucide-react';
 import { useProperties } from '../contexts/PropertyContext';
 
 interface Props {
@@ -29,19 +29,6 @@ export const PropertyCard: React.FC<Props> = ({ property, index, onOpenDetails }
     }
   };
 
-  const handleSMS = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (agent) {
-      window.location.href = `sms:${agent.phone}?body=Habari, nimeona nyumba yako (${property.title}) kwenye DalaliApp.`;
-    }
-  };
-
-  const handleEmail = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (agent && agent.email) {
-      window.location.href = `mailto:${agent.email}?subject=Inquiry about ${property.title}`;
-    }
-  };
 
   const handleInAppChat = (e: React.MouseEvent) => {
     e.stopPropagation();

@@ -32,7 +32,9 @@ export interface Property {
     capacity?: number; // for Halls
     sizeSqm?: number; // for Apartments/Houses
     soundSystem?: boolean; // for Halls
-    kitchen?: boolean; 
+    kitchen?: boolean;
+    parking?: boolean;
+    swimmingPool?: boolean;
   };
 }
 

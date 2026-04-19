@@ -203,7 +203,7 @@ export const AddProperty: React.FC = () => {
     }
   };
 
-  const handleCropComplete = useCallback(async (croppedAreaPixels: any) => {
+  const handleCropComplete = useCallback(async (_croppedAreaPixels: any) => {
     if (selectedImage) {
       setIsCompressing(true);
       try {
@@ -407,7 +407,7 @@ export const AddProperty: React.FC = () => {
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                {units.map((unit, index) => (
+                {units.map((unit, _index) => (
                   <div key={unit.id} style={{ padding: '1.5rem', borderRadius: '12px', border: '1px solid var(--border-color)', background: 'rgba(255,255,255,0.01)', position: 'relative' }}>
                     {units.length > 1 && (
                       <button type="button" onClick={() => removeUnit(unit.id)} style={{ position: 'absolute', top: '10px', right: '10px', background: 'transparent', border: 'none', color: '#ef4444', cursor: 'pointer' }}>

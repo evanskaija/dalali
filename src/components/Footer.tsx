@@ -1,4 +1,4 @@
-import { Home, Share2, Globe } from 'lucide-react';
+import { Share2, Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const Footer: React.FC = () => {
