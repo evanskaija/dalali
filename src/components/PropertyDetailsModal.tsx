@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import type { Property } from '../mockData/properties';
+import type { Property, Review, Report, VisitBooking } from '../mockData/properties';
 import { useProperties } from '../contexts/PropertyContext';
 import { useAuth } from '../contexts/AuthContext';
-import { X, MapPin, BedDouble, Bath, Car, ChevronLeft, ChevronRight, Video, Phone, MessageCircle, MessageSquare, Zap, Droplets, CheckCircle, Maximize2, Users as UsersIcon } from 'lucide-react';
+import { X, MapPin, BedDouble, Bath, Car, ChevronLeft, ChevronRight, Video, Phone, MessageCircle, MessageSquare, Zap, Droplets, CheckCircle, Maximize2, Users as UsersIcon, Calendar, AlertTriangle, ShieldCheck, ShieldAlert } from 'lucide-react';
 
 interface Props {
   property: Property;
@@ -12,7 +12,16 @@ interface Props {
 
 export const PropertyDetailsModal: React.FC<Props> = ({ property, onClose }) => {
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
-  const { agents, orderProperty, finalizeProperty, cancelOrder } = useProperties();
+  const [activeTab, setActiveTab] = useState<'details'|'reviews'|'booking'|'report'>('details');
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState('');
+  const [visitDate, setVisitDate] = useState('');
+  const [visitTime, setVisitTime] = useState('10:00');
+  const [visitMsg, setVisitMsg] = useState('');
+  const [reportReason, setReportReason] = useState<Report['reason']>('scam');
+  const [reportDetails, setReportDetails] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
+  const { agents, orderProperty, finalizeProperty, cancelOrder, addReview, reportProperty, bookVisit } = useProperties();
   const { user } = useAuth();
   const agent = agents.find(a => a.id === property.agentId);
 
@@ -101,8 +110,12 @@ export const PropertyDetailsModal: React.FC<Props> = ({ property, onClose }) => 
         <div style={{ padding: '2rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
             <div>
-              <div style={{ textTransform: 'uppercase', color: 'var(--primary-color)', fontSize: '0.8rem', fontWeight: 800, letterSpacing: '1px', marginBottom: '0.5rem' }}>
+              <div style={{ textTransform: 'uppercase', color: 'var(--primary-color)', fontSize: '0.8rem', fontWeight: 800, letterSpacing: '1px', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 {property.type.replace('-', ' ')}
+                {property.isVerified
+                  ? <span style={{ display:'inline-flex', alignItems:'center', gap:'4px', background:'rgba(16,185,129,0.15)', color:'#10b981', padding:'2px 10px', borderRadius:'20px', fontSize:'0.72rem', fontWeight:700 }}><ShieldCheck size={12} /> Verified</span>
+                  : <span style={{ display:'inline-flex', alignItems:'center', gap:'4px', background:'rgba(239,68,68,0.1)', color:'#ef4444', padding:'2px 10px', borderRadius:'20px', fontSize:'0.72rem', fontWeight:700 }}><ShieldAlert size={12} /> Unverified</span>
+                }
               </div>
               <h2 style={{ fontSize: '1.8rem', margin: '0 0 0.5rem 0' }}>{property.title}</h2>
               <div style={{ display: 'flex', alignItems: 'center', color: 'var(--text-muted)', gap: '6px', fontSize: '0.95rem' }}>
@@ -324,6 +337,108 @@ export const PropertyDetailsModal: React.FC<Props> = ({ property, onClose }) => 
                   </button>
                 )}
               </div>
+            </div>
+          )}
+
+          {/* ── Tab Bar ── */}
+          <div style={{display:'flex',gap:'0.5rem',marginTop:'1rem',borderBottom:'1px solid var(--border-color)',paddingBottom:'0.5rem',overflowX:'auto'}}>
+            {(['details','reviews','booking','report'] as const).map(tab=>(
+              <button key={tab} onClick={()=>{setActiveTab(tab);setSuccessMsg('');}} style={{padding:'0.5rem 1rem',borderRadius:'20px',border:'none',cursor:'pointer',fontWeight:600,fontSize:'0.82rem',background:activeTab===tab?'var(--primary-color)':'rgba(255,255,255,0.05)',color:activeTab===tab?'white':'var(--text-muted)',whiteSpace:'nowrap'}}>
+                {tab==='reviews'?`⭐ Reviews (${property.reviews?.length||0})`:tab==='booking'?'📅 Book Visit':tab==='report'?'🚨 Report':'📋 Details'}
+              </button>
+            ))}
+          </div>
+
+          {successMsg&&<div style={{background:'rgba(16,185,129,0.1)',border:'1px solid #10b981',color:'#10b981',padding:'0.75rem 1rem',borderRadius:'10px',marginTop:'1rem',fontWeight:600}}>{successMsg}</div>}
+
+          {/* ── Reviews Tab ── */}
+          {activeTab==='reviews'&&(
+            <div style={{marginTop:'1.5rem'}}>
+              <h3 style={{marginBottom:'1rem'}}>⭐ Ratings & Reviews</h3>
+              {property.reviews&&property.reviews.length>0?(
+                <div style={{display:'flex',flexDirection:'column',gap:'1rem',marginBottom:'1.5rem',maxHeight:'200px',overflowY:'auto'}}>
+                  {property.reviews.map(r=>(
+                    <div key={r.id} style={{padding:'1rem',background:'rgba(255,255,255,0.03)',borderRadius:'10px',border:'1px solid var(--border-color)'}}>
+                      <div style={{display:'flex',justifyContent:'space-between',marginBottom:'0.4rem'}}>
+                        <strong>{r.userName}</strong>
+                        <span style={{color:'#fbbf24'}}>{'★'.repeat(r.rating)}{'☆'.repeat(5-r.rating)}</span>
+                      </div>
+                      <p style={{margin:0,color:'var(--text-muted)',fontSize:'0.85rem'}}>{r.comment}</p>
+                    </div>
+                  ))}
+                </div>
+              ):(<p style={{color:'var(--text-muted)',marginBottom:'1rem'}}>No reviews yet. Be the first!</p>)}
+              {user&&(
+                <div style={{display:'flex',flexDirection:'column',gap:'0.75rem',padding:'1rem',background:'rgba(255,255,255,0.03)',borderRadius:'10px',border:'1px solid var(--border-color)'}}>
+                  <div style={{display:'flex',gap:'6px'}}>
+                    {[1,2,3,4,5].map(s=>(
+                      <button key={s} onClick={()=>setReviewRating(s)} style={{background:'none',border:'none',cursor:'pointer',fontSize:'1.5rem',color:s<=reviewRating?'#fbbf24':'var(--border-color)'}}>{s<=reviewRating?'★':'☆'}</button>
+                    ))}
+                  </div>
+                  <textarea value={reviewComment} onChange={e=>setReviewComment(e.target.value)} placeholder="Write your review..." rows={3} style={{width:'100%',resize:'vertical',padding:'0.75rem',borderRadius:'8px',background:'var(--bg-color)',border:'1px solid var(--border-color)',color:'var(--text-main)'}} />
+                  <button onClick={async()=>{
+                    if(!reviewComment.trim())return;
+                    const rev:Review={id:Date.now().toString(),userId:user.id,userName:user.name,rating:reviewRating,comment:reviewComment,date:new Date().toLocaleDateString()};
+                    await addReview(property.id,rev);
+                    setReviewComment('');setSuccessMsg('Review submitted! Thank you.');
+                  }} className="btn-primary" style={{width:'100%'}}>Submit Review</button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── Booking Tab ── */}
+          {activeTab==='booking'&&(
+            <div style={{marginTop:'1.5rem'}}>
+              <h3 style={{marginBottom:'0.5rem'}}>📅 Schedule a Property Visit</h3>
+              <p style={{color:'var(--text-muted)',fontSize:'0.85rem',marginBottom:'1rem'}}>Pick a date and time. The agent will confirm your visit.</p>
+              {property.visitBookings&&property.visitBookings.length>0&&(
+                <div style={{marginBottom:'1rem',padding:'0.75rem',background:'rgba(59,130,246,0.08)',borderRadius:'8px',border:'1px solid rgba(59,130,246,0.2)'}}>
+                  <strong style={{fontSize:'0.85rem',color:'#3b82f6'}}>Existing bookings: {property.visitBookings.length}</strong>
+                </div>
+              )}
+              {user?(
+                <div style={{display:'flex',flexDirection:'column',gap:'0.75rem'}}>
+                  <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.75rem'}}>
+                    <div><label style={{fontSize:'0.8rem',color:'var(--text-muted)',display:'block',marginBottom:'4px'}}>Date</label><input type="date" value={visitDate} min={new Date().toISOString().split('T')[0]} onChange={e=>setVisitDate(e.target.value)} style={{width:'100%',padding:'0.6rem',borderRadius:'8px',background:'var(--bg-color)',border:'1px solid var(--border-color)',color:'var(--text-main)'}} /></div>
+                    <div><label style={{fontSize:'0.8rem',color:'var(--text-muted)',display:'block',marginBottom:'4px'}}>Time</label><input type="time" value={visitTime} onChange={e=>setVisitTime(e.target.value)} style={{width:'100%',padding:'0.6rem',borderRadius:'8px',background:'var(--bg-color)',border:'1px solid var(--border-color)',color:'var(--text-main)'}} /></div>
+                  </div>
+                  <textarea value={visitMsg} onChange={e=>setVisitMsg(e.target.value)} placeholder="Optional message to agent..." rows={2} style={{width:'100%',resize:'none',padding:'0.75rem',borderRadius:'8px',background:'var(--bg-color)',border:'1px solid var(--border-color)',color:'var(--text-main)'}} />
+                  <button onClick={async()=>{
+                    if(!visitDate)return;
+                    const bk:VisitBooking={id:Date.now().toString(),userId:user.id,userName:user.name,userPhone:'',date:visitDate,time:visitTime,status:'pending',message:visitMsg};
+                    await bookVisit(property.id,bk);
+                    setVisitDate('');setVisitMsg('');setSuccessMsg('Visit booked! The agent will confirm shortly.');
+                  }} className="btn-primary" style={{width:'100%',background:'#3b82f6'}}><Calendar size={16} style={{display:'inline',marginRight:'6px'}}/>Confirm Visit Booking</button>
+                </div>
+              ):(<p style={{color:'var(--text-muted)'}}>Please <Link to="/login" style={{color:'var(--primary-color)'}}>login</Link> to book a visit.</p>)}
+            </div>
+          )}
+
+          {/* ── Report Tab ── */}
+          {activeTab==='report'&&(
+            <div style={{marginTop:'1.5rem'}}>
+              <h3 style={{marginBottom:'0.5rem',color:'#ef4444'}}>🚨 Report this Listing</h3>
+              <p style={{color:'var(--text-muted)',fontSize:'0.85rem',marginBottom:'1rem'}}>Help keep Nyumba safe. Report scams or fake listings.</p>
+              {property.reports&&property.reports.length>0&&(<div style={{marginBottom:'1rem',padding:'0.75rem',background:'rgba(239,68,68,0.08)',borderRadius:'8px',border:'1px solid rgba(239,68,68,0.2)'}}><strong style={{fontSize:'0.85rem',color:'#ef4444'}}>⚠️ {property.reports.length} report(s) already filed on this listing.</strong></div>)}
+              {user?(
+                <div style={{display:'flex',flexDirection:'column',gap:'0.75rem'}}>
+                  <select value={reportReason} onChange={e=>setReportReason(e.target.value as Report['reason'])} style={{width:'100%',padding:'0.7rem',borderRadius:'8px',background:'var(--bg-color)',border:'1px solid var(--border-color)',color:'var(--text-main)'}}>
+                    <option value="scam">Scam / Fraud</option>
+                    <option value="fake_photos">Fake Photos</option>
+                    <option value="wrong_location">Wrong Location</option>
+                    <option value="duplicate">Duplicate Listing</option>
+                    <option value="other">Other</option>
+                  </select>
+                  <textarea value={reportDetails} onChange={e=>setReportDetails(e.target.value)} placeholder="Describe the problem..." rows={3} style={{width:'100%',resize:'vertical',padding:'0.75rem',borderRadius:'8px',background:'var(--bg-color)',border:'1px solid var(--border-color)',color:'var(--text-main)'}} />
+                  <button onClick={async()=>{
+                    if(!reportDetails.trim())return;
+                    const rep:Report={id:Date.now().toString(),userId:user.id,reason:reportReason,details:reportDetails,date:new Date().toLocaleDateString()};
+                    await reportProperty(property.id,rep);
+                    setReportDetails('');setSuccessMsg('Report submitted. Our team will review it.');
+                  }} className="btn-primary" style={{width:'100%',background:'#ef4444'}}><AlertTriangle size={16} style={{display:'inline',marginRight:'6px'}}/>Submit Report</button>
+                </div>
+              ):(<p style={{color:'var(--text-muted)'}}>Please <Link to="/login" style={{color:'var(--primary-color)'}}>login</Link> to report.</p>)}
             </div>
           )}
 

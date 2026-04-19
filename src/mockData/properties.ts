@@ -1,3 +1,31 @@
+export interface Review {
+  id: string;
+  userId: string;
+  userName: string;
+  rating: number; // 1-5
+  comment: string;
+  date: string;
+}
+
+export interface Report {
+  id: string;
+  userId: string;
+  reason: 'scam' | 'fake_photos' | 'wrong_location' | 'duplicate' | 'other';
+  details: string;
+  date: string;
+}
+
+export interface VisitBooking {
+  id: string;
+  userId: string;
+  userName: string;
+  userPhone: string;
+  date: string; // ISO date string
+  time: string;
+  status: 'pending' | 'confirmed' | 'cancelled';
+  message?: string;
+}
+
 export interface Property {
   id: string;
   title: string;
@@ -14,9 +42,14 @@ export interface Property {
   latitude: number;
   longitude: number;
   agentId: string;
-  orderedBy?: string; // User ID who ordered it
-  orderedUntil?: string; // ISO date string when order expires
+  orderedBy?: string;
+  orderedUntil?: string;
   isPremium: boolean;
+  isVerified?: boolean;        // ✅ Owner/agent is KYC verified
+  verifiedBy?: string;         // Admin who verified
+  reviews?: Review[];          // ⭐ Ratings & Reviews
+  reports?: Report[];          // 🚨 Scam/Fake reports
+  visitBookings?: VisitBooking[]; // 📅 Visit scheduling
   amenities?: {
     electricity?: 'private' | 'sharable';
     water?: 'dawasa' | 'borehole' | 'tank';
@@ -28,10 +61,10 @@ export interface Property {
     gypsum?: boolean;
     ac?: boolean;
     aluminumWindows?: boolean;
-    measurements?: string; // e.g. "20m x 30m" for Kiwanja
-    capacity?: number; // for Halls
-    sizeSqm?: number; // for Apartments/Houses
-    soundSystem?: boolean; // for Halls
+    measurements?: string;
+    capacity?: number;
+    sizeSqm?: number;
+    soundSystem?: boolean;
     kitchen?: boolean;
     parking?: boolean;
     swimmingPool?: boolean;
