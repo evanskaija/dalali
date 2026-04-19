@@ -180,19 +180,14 @@ export const MapSearch: React.FC = () => {
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', paddingTop: '76px', overflow: 'hidden' }}>
       <Navbar />
       
-      <div style={{ display: 'flex', flex: 1, position: 'relative', overflow: 'hidden', flexDirection: isMobile ? 'column' : 'row' }}>
-        {/* Left Sidebar - Search & List */}
+      <div style={{ display: 'flex', flex: 1, position: 'relative', overflow: 'hidden' }}>
+        {/* Main Content Area - Full Width */}
         <div style={{ 
-          width: isMobile ? '100%' : '400px', 
-          height: isMobile ? '60%' : '100%',
-          order: isMobile ? 2 : 1,
+          flex: 1,
           background: 'var(--bg-color)', 
-          borderRight: isMobile ? 'none' : '1px solid var(--border-color)',
-          borderTop: isMobile ? '1px solid var(--border-color)' : 'none',
           display: 'flex',
           flexDirection: 'column',
           zIndex: 10,
-          boxShadow: '4px 0 15px rgba(0,0,0,0.1)'
         }} className="sidebar">
           
           <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--border-color)' }}>
@@ -351,15 +346,48 @@ export const MapSearch: React.FC = () => {
                           }}
                         />
                       </div>
-                      {/* Booking logic shown only when active */}
+                      {/* Map appears below chosen item */}
                       {activeProperty?.id === property.id && (
-                        <button 
-                          onClick={() => handleBookProperty(property)}
-                          className="btn-primary" 
-                          style={{ width: '100%', background: '#10b981', boxShadow: '0 4px 14px rgba(16, 185, 129, 0.3)', padding: '0.6rem', fontSize: '0.9rem' }}
-                        >
-                          {t('map.applyThis')}
-                        </button>
+                        <div className="animate-fade-in" style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                          <div style={{ 
+                            height: '250px', 
+                            width: '100%', 
+                            borderRadius: '16px', 
+                            overflow: 'hidden', 
+                            border: '1px solid var(--border-color)',
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                          }}>
+                            <MapContainer 
+                              center={[property.latitude, property.longitude]} 
+                              zoom={15} 
+                              style={{ height: '100%', width: '100%' }}
+                              zoomControl={false}
+                            >
+                              <TileLayer
+                                attribution='&copy; OpenStreetMap contributors'
+                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                              />
+                              <Marker position={[property.latitude, property.longitude]} icon={propertyIcon} />
+                            </MapContainer>
+                          </div>
+                          
+                          <div style={{ display: 'flex', gap: '10px' }}>
+                            <button 
+                              onClick={() => handleBookProperty(property)}
+                              className="btn-primary" 
+                              style={{ flex: 1, background: '#10b981', padding: '0.8rem' }}
+                            >
+                              <HomeIcon size={18} /> {t('map.applyThis')}
+                            </button>
+                            <button 
+                              onClick={() => setSelectedProperty(property)}
+                              className="btn-outline" 
+                              style={{ flex: 1, padding: '0.8rem' }}
+                            >
+                              View Details
+                            </button>
+                          </div>
+                        </div>
                       )}
                     </div>
                   ))
@@ -402,10 +430,43 @@ export const MapSearch: React.FC = () => {
                     <a href={`tel:${agent.phone}`} style={{ color: 'var(--text-muted)', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}>
                       <Phone size={14} /> {agent.phone}
                     </a>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                      <span>{agent.propertiesCount} {t('map.propertiesListed')}</span>
-                      <span>{t('map.lastSeen')}: {agent.lastSeen}</span>
-                    </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                        <span>{agent.propertiesCount} {t('map.propertiesListed')}</span>
+                        <span>{t('map.lastSeen')}: {agent.lastSeen}</span>
+                      </div>
+
+                      {/* Map appears below chosen agent */}
+                      {activeAgent?.id === agent.id && (
+                        <div className="animate-fade-in" style={{ marginTop: '1rem' }}>
+                          <div style={{ 
+                            height: '200px', 
+                            width: '100%', 
+                            borderRadius: '16px', 
+                            overflow: 'hidden', 
+                            border: '1px solid var(--border-color)' 
+                          }}>
+                            <MapContainer 
+                              center={[agent.latitude, agent.longitude]} 
+                              zoom={15} 
+                              style={{ height: '100%', width: '100%' }}
+                              zoomControl={false}
+                            >
+                              <TileLayer
+                                attribution='&copy; OpenStreetMap contributors'
+                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                              />
+                              <Marker position={[agent.latitude, agent.longitude]} icon={createAgentIcon()} />
+                            </MapContainer>
+                          </div>
+                          <a 
+                            href={`tel:${agent.phone}`} 
+                            className="btn-primary" 
+                            style={{ width: '100%', marginTop: '1rem', padding: '0.8rem' }}
+                          >
+                            <Phone size={18} /> {t('map.contact')} Agent
+                          </a>
+                        </div>
+                      )}
                   </div>
                 ))}
               </>
@@ -414,136 +475,7 @@ export const MapSearch: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Area - The Map */}
-        {(!isMobile || !selectedProperty) && (
-          <div style={{ 
-            flex: isMobile ? 'none' : 1, 
-            height: isMobile ? '35%' : '100%',
-            order: isMobile ? 1 : 2,
-            position: 'relative',
-            padding: isMobile ? '0.5rem' : '1rem',
-            boxSizing: 'border-box'
-          }}>
-            <div style={{ 
-              height: '100%', 
-              width: '100%', 
-              borderRadius: '24px', 
-              overflow: 'hidden', 
-              boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
-              border: '1px solid var(--border-color)' 
-            }}>
-              <MapContainer 
-                center={mapCenter} 
-                zoom={13} 
-                style={{ height: '100%', width: '100%' }}
-                zoomControl={false}
-                key={mapCenter.join(',')}
-              >
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            
-            {/* Draw Properties - Clustered */}
-            {(viewMode === 'all' || viewMode === 'properties') && (
-              <MarkerClusterGroup chunkedLoading>
-                {filteredProperties.map((property) => (
-                  <Marker 
-                    key={property.id} 
-                    position={[property.latitude, property.longitude]}
-                    icon={propertyIcon}
-                    eventHandlers={{
-                      click: () => { setActiveProperty(property); setActiveAgent(null); },
-                    }}
-                  >
-                    <Popup className="custom-popup">
-                      <div style={{ width: '200px' }}>
-                        <div style={{ position: 'relative' }}>
-                          <img 
-                            src={property.images[0]} 
-                            alt={property.title} 
-                            style={{ width: '100%', height: '120px', objectFit: 'cover', borderRadius: '8px', marginBottom: '8px' }} 
-                          />
-                          <div style={{ position: 'absolute', bottom: '16px', left: '8px', background: 'rgba(0,0,0,0.6)', color: 'white', padding: '2px 6px', borderRadius: '10px', fontSize: '0.7rem', backdropFilter: 'blur(4px)' }}>
-                            {property.images.length} Photos
-                          </div>
-                          {property.video && (
-                            <div style={{ position: 'absolute', bottom: '16px', right: '8px', background: 'rgba(239, 68, 68, 0.8)', color: 'white', padding: '2px 6px', borderRadius: '10px', fontSize: '0.7rem', backdropFilter: 'blur(4px)' }}>
-                              Video
-                            </div>
-                          )}
-                        </div>
-                        <h4 style={{ margin: '0 0 4px 0', fontSize: '1rem', color: '#111827' }}>{property.title}</h4>
-                        <p style={{ margin: '0 0 4px 0', fontWeight: 'bold', color: 'var(--primary-color)' }}>TZS {property.price.toLocaleString()}</p>
-                        <p style={{ margin: '0 0 12px 0', fontSize: '0.8rem', color: '#6b7280', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                          <MapPin size={12} /> {property.location}
-                        </p>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                          <button 
-                            onClick={() => handleBookProperty(property)}
-                            style={{ background: '#10b981', color: 'white', border: 'none', padding: '6px 16px', borderRadius: '20px', cursor: 'pointer', fontSize: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', width: '100%', fontWeight: '600' }}
-                          >
-                            <HomeIcon size={14} /> {t('map.orderApply')}
-                          </button>
-                          <a 
-                            href="tel:0792546865"
-                            style={{ background: 'rgba(59,130,246,0.1)', color: '#3b82f6', border: '1px solid #3b82f6', textDecoration: 'none', padding: '6px 16px', borderRadius: '20px', cursor: 'pointer', fontSize: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', width: '100%', fontWeight: '600', boxSizing: 'border-box' }}
-                          >
-                            <Phone size={14} /> {t('map.contact')} Agent
-                          </a>
-                        </div>
-                      </div>
-                    </Popup>
-                  </Marker>
-                ))}
-              </MarkerClusterGroup>
-            )}
 
-            {/* Draw Agents */}
-            {(viewMode === 'all' || viewMode === 'agents') && agentsDisplay.map((agent) => (
-              <Marker 
-                key={agent.id} 
-                position={[agent.latitude, agent.longitude]}
-                icon={createAgentIcon()}
-                eventHandlers={{
-                  click: () => { setActiveAgent(agent); setActiveProperty(null); },
-                }}
-              >
-                <Popup className="custom-popup">
-                  <div style={{ padding: '8px', textAlign: 'center' }}>
-                    <div style={{ background: '#f3f4f6', width: '50px', height: '50px', borderRadius: '50%', margin: '0 auto 8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <User size={24} color={'var(--primary-color)'} />
-                    </div>
-                    <h4 style={{ margin: '0 0 4px 0', fontSize: '1rem', color: '#111827' }}>{agent.name}</h4>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', margin: '0 0 8px 0', fontSize: '0.9rem', color: '#fbbf24' }}>
-                      <Star size={14} fill="currentColor" /> {agent.rating}
-                    </div>
-                    <a href={`tel:${agent.phone}`} style={{ 
-                      background: 'var(--primary-color)', 
-                      color: 'white', 
-                      textDecoration: 'none',
-                      border: 'none', 
-                      padding: '6px 16px', 
-                      borderRadius: '20px',
-                      cursor: 'pointer',
-                      fontSize: '0.9rem',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px',
-                      margin: '0 auto',
-                      width: 'fit-content'
-                    }}>
-                      <Phone size={14} /> {t('map.contact')}
-                    </a>
-                  </div>
-                </Popup>
-              </Marker>
-            ))}
-
-          </MapContainer>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Property Details Modal */}
