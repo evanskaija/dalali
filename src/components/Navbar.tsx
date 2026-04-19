@@ -30,7 +30,7 @@ export const Navbar: React.FC = () => {
   return (
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="container nav-content">
-        <Link to="/" className="nav-logo" style={{ marginRight: '3rem' }}>
+        <Link to="/" className="nav-logo mobile-margin-fix" style={{ marginRight: '3rem' }}>
           <img src="/assets/logo.png" alt="Nyumba App" style={{ height: '40px', objectFit: 'contain' }} />
           <span>Nyumba<span className="text-gradient">App</span></span>
         </Link>

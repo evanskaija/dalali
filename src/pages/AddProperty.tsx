@@ -366,7 +366,7 @@ export const AddProperty: React.FC = () => {
               </div>
             </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '2rem', alignItems: 'start' }}>
+        <div className="responsive-grid-2" style={{ alignItems: 'start' }}>
           {/* Main Form Area */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             

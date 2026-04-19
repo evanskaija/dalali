@@ -134,7 +134,7 @@ export const Payment: React.FC<PaymentPageProps> = ({
             {/* Payment Method */}
             <div className="glass" style={{ padding: '1.5rem', borderRadius: 'var(--border-radius)' }}>
               <h3 style={{ margin: '0 0 1rem' }}>Payment Method</h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem', marginBottom: '1.5rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem', marginBottom: '1.5rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
                 {methodOptions.map(m => (
                   <button key={m.id} onClick={() => setMethod(m.id as never)}
                     style={{ padding: '0.75rem', borderRadius: '10px', border: `2px solid ${method === m.id ? m.color : 'var(--border-color)'}`, background: method === m.id ? m.color + '15' : 'transparent', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', transition: 'all 0.2s' }}>

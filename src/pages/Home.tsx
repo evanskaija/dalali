@@ -89,7 +89,7 @@ export const Home: React.FC = () => {
               <p style={{ fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1rem', color: 'var(--text-muted)' }}>
                 What are you looking for?
               </p>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', width: '100%' }}>
+              <div className="category-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', width: '100%' }}>
                 {[
                   { id: 'house&intent=buy', label: t('cat.house'), icon: '🏠', sub: t('cat.sub.sale'), bg: 'rgba(59,130,246,0.4)', border: 'rgba(59,130,246,0.6)', hover: 'rgba(59,130,246,0.6)' },
                   { id: 'room&intent=rent', label: t('cat.room'), icon: '🛏️', sub: t('cat.sub.rent'), bg: 'rgba(16,185,129,0.4)', border: 'rgba(16,185,129,0.6)', hover: 'rgba(16,185,129,0.6)' },

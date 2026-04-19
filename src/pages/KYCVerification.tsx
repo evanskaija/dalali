@@ -61,7 +61,7 @@ export const KYCVerification: React.FC = () => {
         </div>
 
         {/* Progress Steps */}
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2.5rem', gap: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '2.5rem', gap: 0, overflowX: 'auto', paddingBottom: '1rem', WebkitOverflowScrolling: 'touch' }}>
           {steps.map((s, i) => (
             <React.Fragment key={s.key}>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>

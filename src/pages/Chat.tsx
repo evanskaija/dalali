@@ -37,6 +37,13 @@ export const Chat: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { t } = useLanguage();
   const { agents } = useProperties();
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const loadData = async () => {
@@ -133,11 +140,11 @@ export const Chat: React.FC = () => {
 
         {/* Sidebar - Conversations */}
         <div style={{ 
-          width: '320px', 
+          width: isMobile ? '100%' : '320px', 
           borderRight: '1px solid var(--border-color)', 
           flexDirection: 'column', 
           background: 'var(--bg-color)',
-          display: activeConvo && window.innerWidth < 768 ? 'none' : 'flex'
+          display: activeConvo && isMobile ? 'none' : 'flex'
         }} className="chat-sidebar">
           <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--border-color)' }}>
             <h2 style={{ margin: 0, fontSize: '1.3rem' }}>{t('chat.messages')}</h2>
@@ -199,12 +206,19 @@ export const Chat: React.FC = () => {
         </div>
 
         {/* Main Chat Window */}
-        {activeConvo ? (
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-            {/* Chat Header */}
-            <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--bg-color)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <button onClick={() => setActiveConvo(null)} style={{ display: window.innerWidth < 768 ? 'flex' : 'none', background: 'transparent', border: 'none', color: 'var(--text-muted)' }}><ArrowLeft /></button>
+        <div style={{ 
+          flex: 1, 
+          display: !activeConvo && isMobile ? 'none' : 'flex', 
+          flexDirection: 'column', 
+          overflow: 'hidden',
+          background: 'var(--bg-secondary)'
+        }}>
+          {activeConvo ? (
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+              {/* Chat Header */}
+              <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--bg-color)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <button onClick={() => setActiveConvo(null)} style={{ display: isMobile ? 'flex' : 'none', background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}><ArrowLeft /></button>
                 <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--primary-color), #059669)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, color: 'white', fontSize: '0.85rem' }}>
                   {activeConvo.avatar}
                 </div>
@@ -298,6 +312,7 @@ export const Chat: React.FC = () => {
             <p>Select an agent to start a professional conversation</p>
           </div>
         )}
+        </div>
       </div>
     </div>
   );
