@@ -91,23 +91,23 @@ export const Home: React.FC = () => {
               </p>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', width: '100%' }}>
                 {[
-                  { id: 'house&intent=buy', label: 'Buy House', icon: '🏠', sub: 'For Sale' },
-                  { id: 'room&intent=rent', label: 'Rent House/Room', icon: '🛏️', sub: 'For Rent' },
-                  { id: 'plot&intent=buy', label: 'Buy Plot', icon: '🗺️', sub: 'Viwanja' },
-                  { id: 'farm&intent=buy', label: 'Buy Farms', icon: '🌾', sub: 'Mashamba' },
-                  { id: 'retail', label: 'Retail Space', icon: '🏪', sub: 'Commercial' },
-                  { id: 'office', label: 'Office Space', icon: '🏢', sub: 'Business' },
+                  { id: 'house&intent=buy', label: 'Buy House', icon: '🏠', sub: 'For Sale', bg: 'rgba(59,130,246,0.15)', border: 'rgba(59,130,246,0.3)', hover: 'rgba(59,130,246,0.35)' },
+                  { id: 'room&intent=rent', label: 'Rent House/Room', icon: '🛏️', sub: 'For Rent', bg: 'rgba(16,185,129,0.15)', border: 'rgba(16,185,129,0.3)', hover: 'rgba(16,185,129,0.35)' },
+                  { id: 'plot&intent=buy', label: 'Buy Plot', icon: '🗺️', sub: 'Viwanja', bg: 'rgba(245,158,11,0.15)', border: 'rgba(245,158,11,0.3)', hover: 'rgba(245,158,11,0.35)' },
+                  { id: 'farm&intent=buy', label: 'Buy Farms', icon: '🌾', sub: 'Mashamba', bg: 'rgba(139,92,246,0.15)', border: 'rgba(139,92,246,0.3)', hover: 'rgba(139,92,246,0.35)' },
+                  { id: 'retail', label: 'Retail Space', icon: '🏪', sub: 'Commercial', bg: 'rgba(236,72,153,0.15)', border: 'rgba(236,72,153,0.3)', hover: 'rgba(236,72,153,0.35)' },
+                  { id: 'office', label: 'Office Space', icon: '🏢', sub: 'Business', bg: 'rgba(14,165,233,0.15)', border: 'rgba(14,165,233,0.3)', hover: 'rgba(14,165,233,0.35)' },
                 ].map((cat) => (
                   <button
                     key={cat.id}
                     onClick={() => navigate(`/search?type=${cat.id}`)}
-                    style={{ padding: '1rem 0.5rem', borderRadius: '14px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', transition: 'all 0.3s ease', cursor: 'pointer', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.05)', color: 'white' }}
-                    onMouseOver={e => { e.currentTarget.style.background = 'rgba(99,102,241,0.3)'; e.currentTarget.style.transform = 'translateY(-4px)'; }}
-                    onMouseOut={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                    style={{ padding: '1rem 0.5rem', borderRadius: '14px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', transition: 'all 0.3s ease', cursor: 'pointer', border: `1px solid ${cat.border}`, background: cat.bg, color: 'white' }}
+                    onMouseOver={e => { e.currentTarget.style.background = cat.hover; e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = `0 8px 20px ${cat.border}`; }}
+                    onMouseOut={e => { e.currentTarget.style.background = cat.bg; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
                   >
                     <span style={{ fontSize: '1.6rem' }}>{cat.icon}</span>
                     <span style={{ fontSize: '0.72rem', fontWeight: 700, textAlign: 'center', lineHeight: 1.2 }}>{cat.label}</span>
-                    <span style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,0.5)' }}>{cat.sub}</span>
+                    <span style={{ fontSize: '0.62rem', color: 'rgba(255,255,255,0.6)' }}>{cat.sub}</span>
                   </button>
                 ))}
               </div>
