@@ -7,7 +7,6 @@ import 'leaflet/dist/leaflet.css';
 import { Navbar } from '../components/Navbar';
 import { useProperties } from '../contexts/PropertyContext';
 import type { Property } from '../mockData/properties';
-import { mockAgents } from '../mockData/agents';
 import type { Agent } from '../mockData/agents';
 import { MapPin, User, Star, Phone, Home as HomeIcon, SlidersHorizontal } from 'lucide-react';
 import { PropertyCard } from '../components/PropertyCard';
@@ -75,8 +74,13 @@ export const MapSearch: React.FC = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
   const { addNotification } = useNotifications();
-  const { properties } = useProperties();
-  
+  const { properties, agents } = useProperties();
+  const [agentsDisplay, setAgentsDisplay] = useState<Agent[]>(agents);
+
+  useEffect(() => {
+    setAgentsDisplay(agents);
+  }, [agents]);
+
   // Dar es Salaam center
   const centerPosition: [number, number] = [-6.7924, 39.2083];
 
