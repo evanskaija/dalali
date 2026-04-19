@@ -14,13 +14,7 @@ interface UserRecord {
   listings: number;
 }
 
-const mockUsers: UserRecord[] = [
-  { id: 'u1', name: 'Juma Hassan', email: 'juma@gmail.com', role: 'Agent', status: 'active', joinedDate: '2024-01-15', listings: 12 },
-  { id: 'u2', name: 'Fatma Said', email: 'fatma@gmail.com', role: 'Landlord', status: 'pending', joinedDate: '2024-03-20', listings: 3 },
-  { id: 'u3', name: 'Baraka Mushi', email: 'baraka@gmail.com', role: 'Agent', status: 'active', joinedDate: '2024-02-10', listings: 20 },
-  { id: 'u4', name: 'Neema John', email: 'neema@gmail.com', role: 'Tenant', status: 'active', joinedDate: '2024-04-01', listings: 0 },
-  { id: 'u5', name: 'Ahmed Ali', email: 'ahmed@gmail.com', role: 'Agent', status: 'blocked', joinedDate: '2024-01-05', listings: 35 },
-];
+
 
 interface FraudAlert {
   id: string;
@@ -30,18 +24,30 @@ interface FraudAlert {
   date: string;
 }
 
-const mockFraudAlerts: FraudAlert[] = [
-  { id: 'f1', user: 'Ahmed Ali', reason: '35 listings posted in 24 hours', severity: 'high', date: 'Today 09:11 AM' },
-  { id: 'f2', user: 'Unknown User', reason: 'Same phone number used in 5 accounts', severity: 'high', date: 'Today 07:45 AM' },
-  { id: 'f3', user: 'Peter M.', reason: 'Listing price 90% below area average', severity: 'medium', date: 'Yesterday 3:20 PM' },
-];
+const mockFraudAlerts: FraudAlert[] = [];
 
 import { useProperties } from '../contexts/PropertyContext';
 
 export const AdminDashboard: React.FC = () => {
   const { properties } = useProperties();
   const [activeTab, setActiveTab] = useState<'overview' | 'users' | 'listings' | 'fraud'>('overview');
-  const [users, setUsers] = useState(mockUsers);
+  
+  // Load real users from localStorage
+  const [users, setUsers] = useState<UserRecord[]>(() => {
+    const saved = localStorage.getItem('dalali_users_db');
+    if (!saved) return [];
+    const parsed = JSON.parse(saved);
+    return parsed.map((u: any) => ({
+      id: u.id,
+      name: u.name,
+      email: u.email,
+      role: u.role,
+      status: 'active',
+      joinedDate: 'Recently',
+      listings: properties.filter(p => p.agentId === u.id).length
+    }));
+  });
+
   const { t } = useLanguage();
 
   const updateStatus = (id: string, status: UserRecord['status']) => {
@@ -51,7 +57,7 @@ export const AdminDashboard: React.FC = () => {
   const stats = [
     { label: t('admin.totalUsers'), value: users.length, icon: <Users size={24} />, color: '#10b981' },
     { label: t('admin.activeListings'), value: properties.length, icon: <HomeIcon size={24} />, color: '#3b82f6' },
-    { label: t('admin.fraudAlerts'), value: mockFraudAlerts.filter(f => f.severity === 'high').length, icon: <AlertTriangle size={24} />, color: '#ef4444' },
+    { label: t('admin.fraudAlerts'), value: 0, icon: <AlertTriangle size={24} />, color: '#ef4444' },
     { label: t('admin.pendingKyc'), value: users.filter(u => u.status === 'pending').length, icon: <Shield size={24} />, color: '#f59e0b' },
   ];
 
