@@ -418,26 +418,27 @@ export const MapSearch: React.FC = () => {
         {(!isMobile || !selectedProperty) && (
           <div style={{ 
             flex: isMobile ? 'none' : 1, 
-            height: isMobile ? '40%' : '100%',
+            height: isMobile ? '35%' : '100%',
             order: isMobile ? 1 : 2,
-            position: 'relative' 
+            position: 'relative',
+            padding: isMobile ? '0.5rem' : '1rem',
+            boxSizing: 'border-box'
           }}>
-          
-          {/* Booking Success Toast */}
-          {bookingSuccess && (
-            <div style={{ position: 'absolute', top: '20px', left: '50%', transform: 'translateX(-50%)', zIndex: 1000, background: '#10b981', color: 'white', padding: '1rem 2rem', borderRadius: '30px', boxShadow: '0 10px 25px rgba(0,0,0,0.2)', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px', animation: 'fadeInUp 0.3s ease-out' }}>
-              <HomeIcon size={20} />
-              {bookingSuccess}
-            </div>
-          )}
-
-          <MapContainer 
-            center={mapCenter} 
-            zoom={13} 
-            style={{ height: '100%', width: '100%' }}
-            zoomControl={false}
-            key={mapCenter.join(',')}
-          >
+            <div style={{ 
+              height: '100%', 
+              width: '100%', 
+              borderRadius: '24px', 
+              overflow: 'hidden', 
+              boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
+              border: '1px solid var(--border-color)' 
+            }}>
+              <MapContainer 
+                center={mapCenter} 
+                zoom={13} 
+                style={{ height: '100%', width: '100%' }}
+                zoomControl={false}
+                key={mapCenter.join(',')}
+              >
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -540,7 +541,8 @@ export const MapSearch: React.FC = () => {
             ))}
 
           </MapContainer>
-        </div>
+            </div>
+          </div>
         )}
       </div>
 
