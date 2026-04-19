@@ -180,12 +180,15 @@ export const MapSearch: React.FC = () => {
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', paddingTop: '76px', overflow: 'hidden' }}>
       <Navbar />
       
-      <div style={{ display: 'flex', flex: 1, position: 'relative', overflow: 'hidden' }}>
+      <div style={{ display: 'flex', flex: 1, position: 'relative', overflow: 'hidden', flexDirection: isMobile ? 'column' : 'row' }}>
         {/* Left Sidebar - Search & List */}
         <div style={{ 
-          width: '400px', 
+          width: isMobile ? '100%' : '400px', 
+          height: isMobile ? '60%' : '100%',
+          order: isMobile ? 2 : 1,
           background: 'var(--bg-color)', 
-          borderRight: '1px solid var(--border-color)',
+          borderRight: isMobile ? 'none' : '1px solid var(--border-color)',
+          borderTop: isMobile ? '1px solid var(--border-color)' : 'none',
           display: 'flex',
           flexDirection: 'column',
           zIndex: 10,
@@ -413,7 +416,12 @@ export const MapSearch: React.FC = () => {
 
         {/* Right Area - The Map */}
         {(!isMobile || !selectedProperty) && (
-          <div style={{ flex: 1, position: 'relative' }}>
+          <div style={{ 
+            flex: isMobile ? 'none' : 1, 
+            height: isMobile ? '40%' : '100%',
+            order: isMobile ? 1 : 2,
+            position: 'relative' 
+          }}>
           
           {/* Booking Success Toast */}
           {bookingSuccess && (
