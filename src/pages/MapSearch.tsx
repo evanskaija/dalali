@@ -212,7 +212,7 @@ export const MapSearch: React.FC = () => {
                   // Force re-render by navigating to current URL
                   window.location.href = `/search?${newParams.toString()}`;
                 }}
-                style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', background: 'rgba(255,255,255,0.03)', color: 'white', border: '1px solid var(--border-color)', fontSize: '0.85rem', marginBottom: '8px' }}
+                style={{ width: '100%', padding: '0.6rem', borderRadius: '8px', background: 'rgba(255,255,255,0.03)', color: 'var(--text-main)', border: '1px solid var(--border-color)', fontSize: '0.85rem', marginBottom: '8px' }}
               >
                 <option value="">All Categories</option>
                 <option value="room">Single Room</option>
@@ -226,7 +226,7 @@ export const MapSearch: React.FC = () => {
                 <select 
                   value={selectedDistrict} 
                   onChange={(e) => handleDistrictChange(e.target.value)}
-                  style={{ flex: 1, padding: '0.6rem', borderRadius: '8px', background: 'rgba(255,255,255,0.03)', color: 'white', border: '1px solid var(--border-color)', fontSize: '0.85rem' }}
+                  style={{ flex: 1, padding: '0.6rem', borderRadius: '8px', background: 'rgba(255,255,255,0.03)', color: 'var(--text-main)', border: '1px solid var(--border-color)', fontSize: '0.85rem' }}
                 >
                   <option value="">District</option>
                   <option value="Kinondoni">Kinondoni</option>
@@ -238,7 +238,7 @@ export const MapSearch: React.FC = () => {
                 <select 
                   value={selectedWard} 
                   onChange={(e) => handleWardChange(e.target.value)}
-                  style={{ flex: 1, padding: '0.6rem', borderRadius: '8px', background: 'rgba(255,255,255,0.03)', color: 'white', border: '1px solid var(--border-color)', fontSize: '0.85rem' }}
+                  style={{ flex: 1, padding: '0.6rem', borderRadius: '8px', background: 'rgba(255,255,255,0.03)', color: 'var(--text-main)', border: '1px solid var(--border-color)', fontSize: '0.85rem' }}
                   disabled={!selectedDistrict}
                 >
                   <option value="">Ward/Street</option>
