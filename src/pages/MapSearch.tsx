@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import MarkerClusterGroup from 'react-leaflet-cluster';
+import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+
 import { Icon, divIcon } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Navbar } from '../components/Navbar';
 import { useProperties } from '../contexts/PropertyContext';
 import type { Property } from '../mockData/properties';
 import type { Agent } from '../mockData/agents';
-import { MapPin, User, Star, Phone, Home as HomeIcon, SlidersHorizontal } from 'lucide-react';
+import { User, Star, Phone, Home as HomeIcon, SlidersHorizontal } from 'lucide-react';
 import { PropertyCard } from '../components/PropertyCard';
 import { useLanguage } from '../contexts/LanguageContext';
 import { BookingModal } from '../components/BookingModal';
@@ -52,19 +52,19 @@ export const MapSearch: React.FC = () => {
   const [activeProperty, setActiveProperty] = useState<Property | null>(null);
   const [activeAgent, setActiveAgent] = useState<Agent | null>(null);
   const [viewMode, setViewMode] = useState<'all' | 'properties' | 'agents'>('all');
-  const [agentsDisplay, setAgentsDisplay] = useState<Agent[]>(mockAgents);
+  const [agentsDisplay, setAgentsDisplay] = useState<Agent[]>([]);
   const [searchRadius, setSearchRadius] = useState<number>(50); // Increased default to 50km for better coverage
   const [bookingProperty, setBookingProperty] = useState<Property | null>(null);
-  const [bookingSuccess, setBookingSuccess] = useState<string | null>(null);
   const [showFilters, setShowFilters] = useState(false);
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(50000000); // Increased default for luxury properties
   const [amenityFilters, setAmenityFilters] = useState({ water: false, electricity: false, parking: false });
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-  const [mapCenter, setMapCenter] = useState<[number, number]>([-6.7924, 39.2083]);
   const [selectedDistrict, setSelectedDistrict] = useState<string>('');
   const [selectedWard, setSelectedWard] = useState<string>('');
+  const [, setIsMobile] = useState(window.innerWidth <= 768);
+  const [, setMapCenter] = useState<[number, number]>([-6.7924, 39.2083]);
+  const [, setBookingSuccess] = useState<string | null>(null);
   
   const { t } = useLanguage();
 
@@ -75,8 +75,6 @@ export const MapSearch: React.FC = () => {
   }, []);
   const { addNotification } = useNotifications();
   const { properties, agents } = useProperties();
-  const [agentsDisplay, setAgentsDisplay] = useState<Agent[]>(agents);
-
   useEffect(() => {
     setAgentsDisplay(agents);
   }, [agents]);
