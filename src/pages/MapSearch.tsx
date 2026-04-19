@@ -273,7 +273,7 @@ export const MapSearch: React.FC = () => {
             {showFilters && (
               <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-color)', borderRadius: '8px', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '6px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '6px', color: 'var(--text-main)' }}>
                     <span>{t('map.priceRange')}</span>
                     <span style={{ color: 'var(--primary-color)', fontWeight: 600 }}>TZS {minPrice.toLocaleString()} – {maxPrice.toLocaleString()}</span>
                   </div>
@@ -281,9 +281,9 @@ export const MapSearch: React.FC = () => {
                   <input type="range" min="100000" max="100000000" step="500000" value={maxPrice} onChange={e => setMaxPrice(Number(e.target.value))} style={{ width: '100%', accentColor: 'var(--primary-color)' }} />
                 </div>
                 <div>
-                  <div style={{ fontSize: '0.85rem', marginBottom: '8px', fontWeight: 600 }}>{t('map.amenities')}</div>
+                  <div style={{ fontSize: '0.85rem', marginBottom: '8px', fontWeight: 600, color: 'var(--text-main)' }}>{t('map.amenities')}</div>
                   {(['water', 'electricity', 'parking'] as const).map(a => (
-                    <label key={a} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', marginBottom: '6px', cursor: 'pointer' }}>
+                    <label key={a} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', marginBottom: '6px', cursor: 'pointer', color: 'var(--text-main)' }}>
                       <input type="checkbox" checked={amenityFilters[a]} onChange={() => setAmenityFilters(prev => ({ ...prev, [a]: !prev[a] }))} style={{ accentColor: 'var(--primary-color)', width: '16px', height: '16px' }} />
                       {t(`map.${a}`)}
                     </label>
