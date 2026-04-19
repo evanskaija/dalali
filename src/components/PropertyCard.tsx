@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { Property } from '../mockData/properties';
-import { MapPin, BedDouble, Bath, Car, Camera, Video, Bookmark, Mail, MessageSquare, MessageCircle } from 'lucide-react';
-import { mockAgents } from '../mockData/agents';
+import { MapPin, BedDouble, Bath, Car, Camera, Video, Bookmark, Mail, MessageSquare, MessageCircle, Phone, Maximize2 } from 'lucide-react';
+import { useProperties } from '../contexts/PropertyContext';
 
 interface Props {
   property: Property;
@@ -11,13 +12,15 @@ interface Props {
 
 export const PropertyCard: React.FC<Props> = ({ property, index, onOpenDetails }) => {
   const [isSaved, setIsSaved] = useState(false);
+  const navigate = useNavigate();
+  const { agents } = useProperties();
 
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem('saved_properties') || '[]');
     setIsSaved(saved.includes(property.id));
   }, [property.id]);
 
-  const agent = mockAgents.find(a => a.id === property.agentId);
+  const agent = agents.find(a => a.id === property.agentId);
   
   const handleWhatsApp = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -40,6 +43,13 @@ export const PropertyCard: React.FC<Props> = ({ property, index, onOpenDetails }
     }
   };
 
+  const handleInAppChat = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (agent) {
+      navigate(`/chat/${agent.id}`);
+    }
+  };
+
   const toggleSave = (e: React.MouseEvent) => {
     e.stopPropagation();
     const saved = JSON.parse(localStorage.getItem('saved_properties') || '[]');
@@ -51,6 +61,13 @@ export const PropertyCard: React.FC<Props> = ({ property, index, onOpenDetails }
     }
     localStorage.setItem('saved_properties', JSON.stringify(updated));
     setIsSaved(!isSaved);
+  };
+
+  const handleCall = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (agent) {
+      window.location.href = `tel:${agent.phone}`;
+    }
   };
 
   return (
@@ -86,7 +103,7 @@ export const PropertyCard: React.FC<Props> = ({ property, index, onOpenDetails }
         >
           <Bookmark size={20} fill={isSaved ? "currentColor" : "none"} />
         </button>
-
+ 
         {/* Media indicators overlay */}
         <div style={{ position: 'absolute', bottom: '10px', left: '10px', display: 'flex', gap: '8px' }}>
           <div style={{ background: 'rgba(0,0,0,0.6)', color: 'white', padding: '4px 8px', borderRadius: '12px', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '4px', backdropFilter: 'blur(4px)' }}>
@@ -98,9 +115,10 @@ export const PropertyCard: React.FC<Props> = ({ property, index, onOpenDetails }
             </div>
           )}
         </div>
-
+ 
         <div className={`property-badge ${property.status}`}>
-          {property.status === 'available' ? 'Available' : 'Occupied'}
+          {property.status === 'available' ? 'Available' : 
+           property.status === 'ordered' ? 'Pinned (Reserved)' : 'Occupied'}
         </div>
       </div>
       
@@ -118,20 +136,31 @@ export const PropertyCard: React.FC<Props> = ({ property, index, onOpenDetails }
           {property.distance && ` (${property.distance} km away)`}
         </div>
         
-        <div className="property-features">
-          <div className="feature-item">
-            <BedDouble size={18} />
-            <span>{property.bedrooms} Beds</span>
+        {property.type !== 'plot' && property.type !== 'hall' && (
+          <div className="property-features">
+            <div className="feature-item">
+              <BedDouble size={18} />
+              <span>{property.bedrooms} Beds</span>
+            </div>
+            <div className="feature-item">
+              <Bath size={18} />
+              <span>{property.bathrooms} Baths</span>
+            </div>
+            <div className="feature-item">
+              <Car size={18} />
+              <span>1 Parking</span>
+            </div>
           </div>
-          <div className="feature-item">
-            <Bath size={18} />
-            <span>{property.bathrooms} Baths</span>
+        )}
+
+        {property.type === 'plot' && property.amenities?.measurements && (
+          <div className="property-features">
+            <div className="feature-item">
+              <Maximize2 size={18} />
+              <span>{property.amenities.measurements}</span>
+            </div>
           </div>
-          <div className="feature-item">
-            <Car size={18} />
-            <span>1 Parking</span>
-          </div>
-        </div>
+        )}
         
         {/* Contact Links */}
         {agent && (
@@ -139,9 +168,16 @@ export const PropertyCard: React.FC<Props> = ({ property, index, onOpenDetails }
             <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Contact {agent.name.split(' ')[0]}</span>
             <div style={{ display: 'flex', gap: '8px' }}>
               <button 
-                onClick={handleSMS} 
-                style={{ width: '32px', height: '32px', borderRadius: '50%', border: 'none', background: 'rgba(99, 102, 241, 0.1)', color: 'var(--primary-color)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                title="Normal SMS"
+                onClick={handleCall} 
+                style={{ width: '32px', height: '32px', borderRadius: '50%', border: 'none', background: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                title="Call Agent"
+              >
+                <Phone size={16} />
+              </button>
+              <button 
+                onClick={handleInAppChat} 
+                style={{ width: '32px', height: '32px', borderRadius: '50%', border: 'none', background: 'rgba(16, 185, 129, 0.1)', color: 'var(--primary-color)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                title="In-App Chat"
               >
                 <MessageSquare size={16} />
               </button>
@@ -151,13 +187,6 @@ export const PropertyCard: React.FC<Props> = ({ property, index, onOpenDetails }
                 title="WhatsApp"
               >
                 <MessageCircle size={16} />
-              </button>
-              <button 
-                onClick={handleEmail} 
-                style={{ width: '32px', height: '32px', borderRadius: '50%', border: 'none', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                title="Email"
-              >
-                <Mail size={16} />
               </button>
             </div>
           </div>

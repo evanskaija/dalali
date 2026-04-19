@@ -9,7 +9,7 @@ interface Translations {
 const translations: Translations = {
   // Navbar
   'nav.home': { en: 'Home', sw: 'Nyumbani' },
-  'nav.search': { en: 'Search Rooms', sw: 'Tafuta Vyumba' },
+  'nav.search': { en: 'Search for Property', sw: 'Tafuta Nyumba' },
   'nav.post': { en: 'Post Property', sw: 'Weka Nyumba' },
   'nav.login': { en: 'Login', sw: 'Ingia' },
   'nav.chat': { en: 'Chat', sw: 'Mazungumzo' },
@@ -25,23 +25,17 @@ const translations: Translations = {
   'hero.addedToday': { en: 'Homes added today', sw: 'Nyumba zilizowekwa leo' },
 
   // Categories
-  'cat.houses': { en: 'Houses', sw: 'Nyumba' },
   'cat.fullHouse': { en: 'Full House', sw: 'Nyumba Nzima' },
   'cat.apartments': { en: 'Apartments', sw: 'Apartmenti' },
   'cat.rooms': { en: 'Single Room', sw: 'Chumba Kimoja' },
   'cat.masterRoom': { en: 'Master Room', sw: 'Chumba Kikubwa' },
-  'cat.backRoom': { en: 'Backyard Room', sw: 'Chumba Nyuma ya Nyumba' },
-  'cat.sittingRoom': { en: 'Sitting + Bedroom', sw: 'Chumba na Sebule' },
-  'cat.villas': { en: 'Villas', sw: 'Fahari' },
-  'cat.commercial': { en: 'Commercial', sw: 'Biashara' },
-  'cat.shortStays': { en: 'Short Stays', sw: 'Muda Mfupi' },
   'cat.plots': { en: 'Compounds / Kiwanja', sw: 'Viwanja' },
   'cat.halls': { en: 'Halls / Ukumbi', sw: 'Kumbi za Sherehe' },
 
   // Sections
   'home.nearby': { en: 'Nearby Properties', sw: 'Nyumba Zilizo Karibu' },
   'home.viewAll': { en: 'View All', sw: 'Tazama Zote' },
-  'home.howItWorks': { en: 'How DalaliApp Works', sw: 'Jinsi DalaliApp Inavyofanya Kazi' },
+  'home.howItWorks': { en: 'How NyumbaApp Works', sw: 'Jinsi NyumbaApp Inavyofanya Kazi' },
   'home.step1.title': { en: '1. Search Location', sw: '1. Tafuta Eneo' },
   'home.step1.desc': { en: 'Find properties near you using our map-based search.', sw: 'Tafuta nyumba karibu nawe ukitumia ramani.' },
   'home.step2.title': { en: '2. Request Viewing', sw: '2. Omba Kuona' },
@@ -176,6 +170,21 @@ const translations: Translations = {
   'common.back': { en: 'Back', sw: 'Rudi Nyuma' },
   'common.share': { en: 'Share', sw: 'Shiriki' },
   'common.save': { en: 'Save', sw: 'Hifadhi' },
+  'common.continue': { en: 'Continue', sw: 'Endelea' },
+  'common.cancel': { en: 'Cancel', sw: 'Ghairi' },
+  
+  // Search Portal
+  'search.title': { en: 'Search Property', sw: 'Tafuta Nyumba' },
+  'search.step': { en: 'Step', sw: 'Hatua ya' },
+  'search.of': { en: 'of', sw: 'kati ya' },
+  'search.selectCategory': { en: 'Select a category', sw: 'Chagua aina ya nyumba' },
+  'search.selectLocation': { en: 'Select a location', sw: 'Chagua eneo' },
+  'search.changeCategory': { en: 'Change Category', sw: 'Badilisha Aina' },
+  'search.generalInfo': { en: 'General Property Info', sw: 'Taarifa za Nyumba kwa Ujumla' },
+  'search.streetName': { en: 'Street or Compound Name', sw: 'Jina la Mtaa au Eneo' },
+  'search.selectStreet': { en: 'Select a Street...', sw: 'Chagua Mtaa...' },
+  'search.showAll': { en: 'Show All', sw: 'Onyesha Zote' },
+  'search.changeSelection': { en: 'Change Selection', sw: 'Badilisha Maamuzi' },
 };
 
 interface LanguageContextType {

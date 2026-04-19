@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import type { Property } from '../mockData/properties';
-import { X, MapPin, BedDouble, Bath, Car, ChevronLeft, ChevronRight, Video, Phone, MessageCircle, Zap, Shield, Droplets, CheckCircle } from 'lucide-react';
-import { mockAgents } from '../mockData/agents';
+import { useProperties } from '../contexts/PropertyContext';
+import { useAuth } from '../contexts/AuthContext';
+import { X, MapPin, BedDouble, Bath, Car, ChevronLeft, ChevronRight, Video, Phone, MessageCircle, MessageSquare, Zap, Shield, Droplets, CheckCircle, Maximize2, Users as UsersIcon } from 'lucide-react';
 
 interface Props {
   property: Property;
@@ -10,7 +12,9 @@ interface Props {
 
 export const PropertyDetailsModal: React.FC<Props> = ({ property, onClose }) => {
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
-  const agent = mockAgents.find(a => a.id === property.agentId);
+  const { agents, orderProperty, finalizeProperty, cancelOrder } = useProperties();
+  const { user } = useAuth();
+  const agent = agents.find(a => a.id === property.agentId);
 
   // Combine images and videos into one media array
   const mediaList = [...property.images];
@@ -116,63 +120,98 @@ export const PropertyDetailsModal: React.FC<Props> = ({ property, onClose }) => 
             </div>
           </div>
 
-          <div style={{ display: 'flex', gap: '1.5rem', margin: '2rem 0', padding: '1.5rem', background: 'rgba(255,255,255,0.02)', borderRadius: '12px', border: '1px solid var(--border-color)', flexWrap: 'wrap', justifyContent: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: '100px' }}>
-              <div style={{ background: 'var(--bg-color)', width: '45px', height: '45px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <BedDouble size={20} color="var(--primary-color)" />
-              </div>
-              <div>
-                <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>{property.bedrooms}</div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Bedrooms</div>
-              </div>
-            </div>
+          <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '2rem', flexWrap: 'wrap', background: 'rgba(255,255,255,0.03)', padding: '1.2rem', borderRadius: '16px', border: '1px solid var(--border-color)' }}>
             
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: '100px' }}>
-              <div style={{ background: 'var(--bg-color)', width: '45px', height: '45px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Bath size={20} color="var(--primary-color)" />
+            {/* Conditional Features based on type */}
+            {property.type === 'plot' && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: '150px' }}>
+                <div style={{ background: 'var(--bg-color)', width: '45px', height: '45px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Maximize2 size={20} color="var(--primary-color)" />
+                </div>
+                <div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>{property.amenities?.measurements || 'Contact Agent'}</div>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Measurements</div>
+                </div>
               </div>
-              <div>
-                <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>{property.bathrooms}</div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Bathrooms</div>
-              </div>
-            </div>
+            )}
 
+            {property.type === 'hall' && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: '150px' }}>
+                <div style={{ background: 'var(--bg-color)', width: '45px', height: '45px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <UsersIcon size={20} color="var(--primary-color)" />
+                </div>
+                <div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>{property.amenities?.capacity || '0'}</div>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Capacity</div>
+                </div>
+              </div>
+            )}
+
+            {property.type !== 'plot' && property.type !== 'hall' && (
+              <>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: '100px' }}>
+                  <div style={{ background: 'var(--bg-color)', width: '45px', height: '45px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <BedDouble size={20} color="var(--primary-color)" />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>{property.bedrooms}</div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Bedrooms</div>
+                  </div>
+                </div>
+                
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: '100px' }}>
+                  <div style={{ background: 'var(--bg-color)', width: '45px', height: '45px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Bath size={20} color="var(--primary-color)" />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>{property.bathrooms}</div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Bathrooms</div>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/* Common Feature: Parking/Accessibility */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: '100px' }}>
               <div style={{ background: 'var(--bg-color)', width: '45px', height: '45px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Car size={20} color="var(--primary-color)" />
               </div>
               <div>
-                <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>{property.amenities?.fenced ? 'Yes' : 'Open'}</div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Parking/Fence</div>
+                <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>{property.amenities?.fenced ? 'Yes' : (property.type === 'plot' ? 'Available' : 'Open')}</div>
+                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{property.type === 'plot' ? 'Accessibility' : 'Parking/Fence'}</div>
               </div>
             </div>
           </div>
 
           {/* Utilities Quick View */}
           <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
-            <div className="glass" style={{ padding: '0.8rem 1.2rem', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '10px', border: '1px solid rgba(16,185,129,0.2)' }}>
-              <Zap size={18} color="var(--primary-color)" />
-              <div>
-                <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Electricity</div>
-                <div style={{ fontSize: '0.85rem', fontWeight: 700 }}>{property.amenities?.electricity === 'sharable' ? 'Sharable Luku' : 'Private Meter'}</div>
-              </div>
-            </div>
-            <div className="glass" style={{ padding: '0.8rem 1.2rem', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '10px', border: '1px solid rgba(16,185,129,0.2)' }}>
-              <Droplets size={18} color="var(--primary-color)" />
-              <div>
-                <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Water Source</div>
-                <div style={{ fontSize: '0.85rem', fontWeight: 700 }}>{property.amenities?.water?.toUpperCase() || 'DAWASA'}</div>
-              </div>
-            </div>
-            {property.amenities?.ac && (
+            {property.type !== 'plot' && (
+              <>
+                <div className="glass" style={{ padding: '0.8rem 1.2rem', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '10px', border: '1px solid rgba(16,185,129,0.2)' }}>
+                  <Zap size={18} color="var(--primary-color)" />
+                  <div>
+                    <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Electricity</div>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 700 }}>{property.amenities?.electricity === 'sharable' ? 'Sharable Luku' : 'Private Meter'}</div>
+                  </div>
+                </div>
+                <div className="glass" style={{ padding: '0.8rem 1.2rem', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '10px', border: '1px solid rgba(16,185,129,0.2)' }}>
+                  <Droplets size={18} color="var(--primary-color)" />
+                  <div>
+                    <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Water Source</div>
+                    <div style={{ fontSize: '0.85rem', fontWeight: 700 }}>{property.amenities?.water?.toUpperCase() || 'DAWASA'}</div>
+                  </div>
+                </div>
+              </>
+            )}
+            {property.amenities?.sizeSqm ? (
               <div className="glass" style={{ padding: '0.8rem 1.2rem', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '10px', border: '1px solid rgba(16,185,129,0.2)' }}>
-                <Shield size={18} color="var(--primary-color)" />
+                <Maximize2 size={18} color="var(--primary-color)" />
                 <div>
-                  <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Comfort</div>
-                  <div style={{ fontSize: '0.85rem', fontWeight: 700 }}>Air Conditioned</div>
+                  <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Structure Size</div>
+                  <div style={{ fontSize: '0.85rem', fontWeight: 700 }}>{property.amenities.sizeSqm} SQM</div>
                 </div>
               </div>
-            )}
+            ) : null}
           </div>
 
           {/* Amenities Checklist */}
@@ -186,6 +225,10 @@ export const PropertyDetailsModal: React.FC<Props> = ({ property, onClose }) => 
                   { key: 'securityGuard', label: '24/7 Security Guard' },
                   { key: 'tiled', label: 'Tiled Floors' },
                   { key: 'gypsum', label: 'Gypsum Ceiling' },
+                  { key: 'aluminumWindows', label: 'Aluminum Windows' },
+                  { key: 'ac', label: 'Air Conditioning' },
+                  { key: 'soundSystem', label: 'Professional Sound System' },
+                  { key: 'kitchen', label: 'Kitchen Area' },
                 ].filter(item => (property.amenities as any)[item.key]).map(item => (
                   <div key={item.key} style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-main)', fontSize: '0.9rem' }}>
                     <CheckCircle size={16} color="#10b981" /> {item.label}
@@ -199,33 +242,87 @@ export const PropertyDetailsModal: React.FC<Props> = ({ property, onClose }) => 
           <div style={{ marginBottom: '2rem' }}>
             <h3 style={{ marginBottom: '1rem' }}>Description</h3>
             <p style={{ color: 'var(--text-muted)', lineHeight: '1.7', fontSize: '0.95rem' }}>
-              This beautifully appointed {property.type.replace('-', ' ')} located in the heart of {property.location.split(',')[0]} offers the perfect blend of comfort and convenience. 
-              Featuring {property.bedrooms} spacious bedrooms, {property.bathrooms} modern bathrooms, and secure parking. 
-              {property.isPremium && " As a premium listing, it also includes backup electricity, continuous water supply, and top-tier security."}
-              <br/><br/>
-              With over {property.images.length} photos and videos provided by the landlord, you can see every detail of this property before scheduling a visit. High-speed internet is pre-wired, and the community is extremely welcoming.
+              {property.description || `This beautifully appointed ${property.type.replace('-', ' ')} located in the heart of ${property.location.split(',')[0]} offers the perfect blend of comfort and convenience.`}
             </p>
+          </div>
+
+          {/* Map Directions Button */}
+          <div style={{ marginBottom: '2rem', padding: '1.5rem', borderRadius: '16px', background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.2)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+              <div>
+                <h4 style={{ margin: 0, color: '#3b82f6', marginBottom: '4px' }}>How to get there?</h4>
+                <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-muted)' }}>Get precise turn-by-turn road map directions to this property.</p>
+              </div>
+              <a 
+                href={`https://www.google.com/maps/dir/?api=1&destination=${property.latitude},${property.longitude}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary"
+                style={{ background: '#3b82f6', border: 'none', display: 'flex', alignItems: 'center', gap: '8px', textDecoration: 'none', borderRadius: '12px' }}
+              >
+                <MapPin size={18} /> Get Road Map
+              </a>
+            </div>
           </div>
 
           {/* Agent Box */}
           {agent && (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.5rem', background: 'var(--primary-color)', color: 'white', borderRadius: '12px', flexWrap: 'wrap', gap: '1rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <div style={{ width: '50px', height: '50px', borderRadius: '50%', background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', fontWeight: 800 }}>
-                  {agent.name.charAt(0)}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-color)', borderRadius: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <div style={{ width: '50px', height: '50px', borderRadius: '50%', background: 'var(--primary-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', fontWeight: 800, color: 'white' }}>
+                    {agent.name.charAt(0)}
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: '1.1rem' }}>{agent.name}</div>
+                    <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Dalali • {agent.rating}★ Rating</div>
+                  </div>
                 </div>
-                <div>
-                  <div style={{ fontWeight: 700, fontSize: '1.1rem' }}>{agent.name}</div>
-                  <div style={{ fontSize: '0.85rem', opacity: 0.9 }}>Dalali • {agent.rating}★ Rating</div>
+                <div style={{ display: 'flex', gap: '0.8rem', flexWrap: 'wrap' }}>
+                  <a href={`tel:${agent.phone}`} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--primary-color)', color: 'white', padding: '0.6rem 1.2rem', borderRadius: '30px', textDecoration: 'none', fontWeight: 700, fontSize: '0.9rem' }}>
+                    <Phone size={16} /> Call
+                  </a>
+                  <Link to={`/chat/${agent.id}`} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.05)', color: 'white', padding: '0.6rem 1.2rem', borderRadius: '30px', textDecoration: 'none', fontWeight: 700, fontSize: '0.9rem', border: '1px solid var(--border-color)' }}>
+                    <MessageSquare size={16} /> Chat
+                  </Link>
+                  <a href={`https://wa.me/${agent.phone.replace(/\+/g, '').replace(/\s/g, '')}`} target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#25D366', color: 'white', padding: '0.6rem 1.2rem', borderRadius: '30px', textDecoration: 'none', fontWeight: 700, fontSize: '0.9rem' }}>
+                    <MessageCircle size={16} /> WhatsApp
+                  </a>
                 </div>
               </div>
-              <div style={{ display: 'flex', gap: '1rem' }}>
-                <a href={`tel:${agent.phone}`} style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'white', color: 'var(--primary-color)', padding: '0.6rem 1.2rem', borderRadius: '30px', textDecoration: 'none', fontWeight: 700, fontSize: '0.9rem' }}>
-                  <Phone size={16} /> Call
-                </a>
-                <a href={`https://wa.me/${agent.phone.replace(/\+/g, '')}`} target="_blank" rel="noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#25D366', color: 'white', padding: '0.6rem 1.2rem', borderRadius: '30px', textDecoration: 'none', fontWeight: 700, fontSize: '0.9rem' }}>
-                  <MessageCircle size={16} /> WhatsApp
-                </a>
+
+              {/* Order / Pin Logic */}
+              <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '1rem', marginTop: '0.5rem' }}>
+                {property.status === 'ordered' ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                    <div style={{ background: 'rgba(251, 191, 36, 0.1)', color: '#fbbf24', padding: '0.75rem', borderRadius: '8px', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Zap size={16} /> This room is currently <strong>Pinned (Ordered)</strong>. 
+                      It will be released in {Math.ceil((new Date(property.orderedUntil!).getTime() - new Date().getTime()) / (1000 * 60 * 60))} hours if not taken.
+                    </div>
+                    {user?.id === property.agentId ? (
+                      <div style={{ display: 'flex', gap: '10px' }}>
+                        <button onClick={() => { finalizeProperty(property.id); onClose(); }} className="btn-primary" style={{ flex: 1, background: '#10b981' }}>Mark as Taken (Remove)</button>
+                        <button onClick={() => cancelOrder(property.id)} className="btn-outline" style={{ flex: 1 }}>Cancel Order</button>
+                      </div>
+                    ) : (
+                      <button disabled className="btn-outline" style={{ width: '100%', opacity: 0.5, cursor: 'not-allowed' }}>Currently Reserved</button>
+                    )}
+                  </div>
+                ) : (
+                  <button 
+                    onClick={() => {
+                      if (!user) {
+                        alert("Please login to order this property.");
+                        return;
+                      }
+                      orderProperty(property.id, user.id);
+                    }}
+                    className="btn-primary" 
+                    style={{ width: '100%', padding: '1rem', background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', fontWeight: 800, fontSize: '1rem' }}
+                  >
+                    Order & Pin Room (for 2 Days)
+                  </button>
+                )}
               </div>
             </div>
           )}

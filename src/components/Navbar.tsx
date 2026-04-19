@@ -31,8 +31,8 @@ export const Navbar: React.FC = () => {
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <div className="container nav-content">
         <Link to="/" className="nav-logo" style={{ marginRight: '3rem' }}>
-          <Home className="text-gradient" size={28} />
-          <span>Dalali<span className="text-gradient">App</span></span>
+          <img src="/assets/logo.png" alt="Nyumba App" style={{ height: '40px', objectFit: 'contain' }} />
+          <span>Nyumba<span className="text-gradient">App</span></span>
         </Link>
         
         <button className="mobile-menu-btn" onClick={() => setMenuOpen(!menuOpen)}>
@@ -43,8 +43,23 @@ export const Navbar: React.FC = () => {
           <Link to="/" className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}>
             <Home size={20} /> {t('nav.home')}
           </Link>
-          <Link to="/search" className={`nav-link ${location.pathname === '/search' ? 'active' : ''}`}>
-            <MapPin size={20} /> {t('nav.search')}
+          <Link 
+            to="/seeker-search" 
+            className={`nav-link ${location.pathname === '/seeker-search' ? 'active' : ''}`}
+            style={{ 
+              background: '#10b981', 
+              color: 'white', 
+              padding: '0.6rem 1.2rem', 
+              borderRadius: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              fontWeight: 700,
+              boxShadow: '0 4px 15px rgba(16, 185, 129, 0.2)',
+              transition: 'all 0.3s ease'
+            }}
+          >
+            <MapPin size={20} color="white" /> {t('nav.search')}
           </Link>
           <Link to="/chat" className={`nav-link ${location.pathname === '/chat' ? 'active' : ''}`}>
             <MessageSquare size={20} /> {t('nav.chat')}
@@ -57,19 +72,82 @@ export const Navbar: React.FC = () => {
           </Link>
           
           {(!user || user.role === 'agent' || user.role === 'landlord') && (
-            <Link to="/add" className="btn-primary" style={{ marginTop: 'auto' }}>
+            <Link 
+              to="/add" 
+              style={{ 
+                background: '#3b82f6', 
+                color: 'white', 
+                padding: '0.6rem 1.2rem', 
+                borderRadius: '12px', 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '8px', 
+                textDecoration: 'none', 
+                fontWeight: 700,
+                boxShadow: '0 4px 15px rgba(59, 130, 246, 0.2)'
+              }}
+            >
               <Plus size={20} /> {t('nav.post')}
             </Link>
           )}
           
           <div className="nav-actions">
-            <button onClick={toggleLanguage} className="btn-outline" style={{ padding: '0.5rem', borderRadius: '50%', display: 'flex' }} title={language === 'en' ? 'Switch to Swahili' : 'Badili kwenda Kiingereza'}>
-              <Globe size={18} />
-              <span style={{ fontSize: '0.7rem', fontWeight: 'bold', marginLeft: '4px' }}>{language.toUpperCase()}</span>
+            <button 
+              onClick={toggleLanguage} 
+              style={{ 
+                padding: '0.5rem 0.8rem', 
+                borderRadius: '20px', 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '6px',
+                border: '1px solid var(--border-color)',
+                color: 'var(--primary-color)',
+                background: 'rgba(79, 70, 229, 0.1)',
+                fontWeight: 800,
+                fontSize: '0.75rem',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                cursor: 'pointer',
+                minWidth: '85px',
+                justifyContent: 'center'
+              }} 
+              title={language === 'en' ? 'Switch to Swahili' : 'Badili kwenda Kiingereza'}
+            >
+              <Globe size={16} color="var(--primary-color)" />
+              <span>{language === 'en' ? 'EN' : 'SW'}</span>
             </button>
             
-            <button onClick={toggleTheme} className="btn-outline" style={{ padding: '0.5rem', borderRadius: '50%', display: 'flex' }} title="Toggle Theme">
-              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+            <button 
+              onClick={toggleTheme} 
+              style={{ 
+                padding: '0.5rem 0.8rem', 
+                borderRadius: '20px', 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '6px',
+                border: '1px solid var(--border-color)',
+                color: theme === 'dark' ? '#fbbf24' : '#6366f1',
+                background: theme === 'dark' ? 'rgba(251, 191, 36, 0.15)' : 'rgba(99, 102, 241, 0.1)',
+                fontWeight: 800,
+                fontSize: '0.75rem',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                cursor: 'pointer',
+                boxShadow: theme === 'dark' ? '0 0 15px rgba(251, 191, 36, 0.2)' : 'none',
+                minWidth: '85px',
+                justifyContent: 'center'
+              }} 
+              title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            >
+              {theme === 'dark' ? (
+                <>
+                  <Sun size={16} fill="#fbbf24" />
+                  <span>LIGHT</span>
+                </>
+              ) : (
+                <>
+                  <Moon size={16} fill="#6366f1" />
+                  <span>DARK</span>
+                </>
+              )}
             </button>
 
             <NotificationBell />

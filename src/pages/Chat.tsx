@@ -1,15 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Navbar } from '../components/Navbar';
-import { Send, Phone, Image, Check, CheckCheck, Circle, MessageSquare, MessageCircle, Mail } from 'lucide-react';
+import { Send, Phone, Image, Check, CheckCheck, Circle, MessageSquare, MessageCircle, Mail, ArrowLeft } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useProperties } from '../contexts/PropertyContext';
+import { getChats, saveChats } from '../utils/db';
 
 interface Message {
   id: string;
   senderId: string;
+  convoId: string;
   text: string;
   status: 'sent' | 'delivered' | 'seen';
   timestamp: Date;
-  imageUrl?: string;
 }
 
 interface Conversation {
@@ -24,54 +27,105 @@ interface Conversation {
   email: string;
 }
 
-const mockConversations: Conversation[] = [
-  { id: 'c1', name: 'Juma Hassan', role: 'Dalali', avatar: 'JH', lastMessage: 'The room is still available', unread: 2, phone: '+255792546865', online: true, email: 'evanskaija1576@gmail.com' },
-  { id: 'c2', name: 'Fatma Said', role: 'Landlord', avatar: 'FS', lastMessage: 'When can you come see it?', unread: 0, phone: '+255792546865', online: true, email: 'evapedri20@gmail.com' },
-  { id: 'c3', name: 'Baraka Mushi', role: 'Dalali', avatar: 'BM', lastMessage: 'Price is negotiable', unread: 1, phone: '+255792546865', online: false, email: 'info@dalali.co.tz' },
-];
-
-const mockMessages: Message[] = [
-  { id: 'm1', senderId: 'c1', text: 'Habari, nyumba ipo bado?', status: 'seen', timestamp: new Date(Date.now() - 3600000) },
-  { id: 'm2', senderId: 'me', text: 'Ndio, ipo bado. Bei ni shilingi 350,000 kwa mwezi.', status: 'seen', timestamp: new Date(Date.now() - 3400000) },
-  { id: 'm3', senderId: 'c1', text: 'Ninaweza kuja kuangalia lini?', status: 'seen', timestamp: new Date(Date.now() - 3200000) },
-  { id: 'm4', senderId: 'me', text: 'Unaweza kuja kesho asubuhi saa tatu.', status: 'seen', timestamp: new Date(Date.now() - 3000000) },
-  { id: 'm5', senderId: 'c1', text: 'Sawa sana, nitakuwa hapo!', status: 'seen', timestamp: new Date(Date.now() - 600000) },
-  { id: 'm6', senderId: 'c1', text: 'The room is still available', status: 'delivered', timestamp: new Date(Date.now() - 120000) },
-];
-
 export const Chat: React.FC = () => {
-  const [conversations] = useState(mockConversations);
-  const [activeConvo, setActiveConvo] = useState<Conversation | null>(mockConversations[0]);
-  const [messages, setMessages] = useState<Message[]>(mockMessages);
+  const { convoId } = useParams<{ convoId?: string }>();
+  const navigate = useNavigate();
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [activeConvo, setActiveConvo] = useState<Conversation | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { t } = useLanguage();
+  const { agents } = useProperties();
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const savedMessages = await getChats().catch(() => []);
+        
+        // Build conversations from dynamic agents + any saved messages
+        const convos: Conversation[] = agents.map(agent => {
+          const agentMessages = savedMessages.filter(m => m.convoId === agent.id);
+          const lastMsg = agentMessages.length > 0 ? agentMessages[agentMessages.length - 1].text : 'Start a conversation';
+          return {
+            id: agent.id,
+            name: agent.name,
+            role: 'Agent',
+            avatar: agent.name.split(' ').map(n => n[0]).join(''),
+            lastMessage: lastMsg,
+            unread: 0,
+            phone: agent.phone,
+            online: Math.random() > 0.3,
+            email: agent.email
+          };
+        });
+
+        setConversations(convos);
+        setMessages(savedMessages);
+        
+        if (convoId) {
+          const found = convos.find(c => c.id === convoId);
+          if (found) setActiveConvo(found);
+        } else if (convos.length > 0 && !activeConvo) {
+          setActiveConvo(convos[0]);
+        }
+      } catch (err) {
+        console.error("Chat loading failed:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadData();
+  }, [convoId, agents]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, [messages, activeConvo]);
 
-  const sendMessage = () => {
-    if (!newMessage.trim()) return;
+  const sendMessage = async () => {
+    if (!newMessage.trim() || !activeConvo) return;
+    
     const msg: Message = {
       id: `m${Date.now()}`,
       senderId: 'me',
+      convoId: activeConvo.id,
       text: newMessage,
       status: 'sent',
       timestamp: new Date(),
     };
-    setMessages(prev => [...prev, msg]);
+
+    const updatedMessages = [...messages, msg];
+    setMessages(updatedMessages);
     setNewMessage('');
-    // Simulate reply
-    setTimeout(() => {
-      setMessages(prev => [
-        ...prev,
-        { id: `m${Date.now()}`, senderId: activeConvo?.id || 'c1', text: 'Asante, nitafikiri...', status: 'delivered', timestamp: new Date() }
-      ]);
-    }, 2000);
+    await saveChats(updatedMessages);
+
+    // Update last message in sidebar
+    setConversations(prev => prev.map(c => c.id === activeConvo.id ? { ...c, lastMessage: msg.text } : c));
+
+    // Simulate agent reply
+    setTimeout(async () => {
+      const reply: Message = {
+        id: `r${Date.now()}`,
+        senderId: activeConvo.id,
+        convoId: activeConvo.id,
+        text: 'Received! I will get back to you shortly.',
+        status: 'delivered',
+        timestamp: new Date(),
+      };
+      const withReply = [...updatedMessages, reply];
+      setMessages(withReply);
+      await saveChats(withReply);
+      setConversations(prev => prev.map(c => c.id === activeConvo.id ? { ...c, lastMessage: reply.text } : c));
+    }, 1500);
   };
 
-  const formatTime = (date: Date) => date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const formatTime = (date: any) => {
+    const d = date instanceof Date ? date : new Date(date);
+    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
+
+  if (isLoading) return <div style={{ paddingTop: '100px', textAlign: 'center', color: 'var(--text-muted)' }}>Preparing your Chat...</div>;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', paddingTop: '76px', overflow: 'hidden', background: 'var(--bg-color)' }}>
@@ -79,10 +133,16 @@ export const Chat: React.FC = () => {
       <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
 
         {/* Sidebar - Conversations */}
-        <div style={{ width: '320px', borderRight: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', background: 'var(--bg-color)' }}>
+        <div style={{ 
+          width: '320px', 
+          borderRight: '1px solid var(--border-color)', 
+          flexDirection: 'column', 
+          background: 'var(--bg-color)',
+          display: activeConvo && window.innerWidth < 768 ? 'none' : 'flex'
+        }} className="chat-sidebar">
           <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--border-color)' }}>
             <h2 style={{ margin: 0, fontSize: '1.3rem' }}>{t('chat.messages')}</h2>
-            <p style={{ margin: '4px 0 0', color: 'var(--text-muted)', fontSize: '0.85rem' }}>Chat with Dalalis & Landlords</p>
+            <p style={{ margin: '4px 0 0', color: 'var(--text-muted)', fontSize: '0.85rem' }}>Direct Agents & Owners</p>
           </div>
           <div style={{ flex: 1, overflowY: 'auto' }}>
             {conversations.map(convo => (
@@ -113,6 +173,26 @@ export const Chat: React.FC = () => {
                   </div>
                   <div style={{ fontSize: '0.75rem', color: 'var(--primary-color)', marginBottom: '2px' }}>{convo.role}</div>
                   <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{convo.lastMessage}</div>
+                  
+                  {/* Quick Contact Actions */}
+                  <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
+                    <a 
+                      href={`https://wa.me/${convo.phone.replace(/\+/g, '')}`} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      style={{ padding: '4px 8px', borderRadius: '4px', background: 'rgba(37, 211, 102, 0.1)', color: '#25D366', fontSize: '0.7rem', textDecoration: 'none', fontWeight: 600 }}
+                    >
+                      WhatsApp
+                    </a>
+                    <a 
+                      href={`tel:${convo.phone}`}
+                      onClick={(e) => e.stopPropagation()}
+                      style={{ padding: '4px 8px', borderRadius: '4px', background: 'rgba(255, 255, 255, 0.05)', color: 'var(--text-muted)', fontSize: '0.7rem', textDecoration: 'none', fontWeight: 600 }}
+                    >
+                      Call
+                    </a>
+                  </div>
                 </div>
               </div>
             ))}
@@ -125,6 +205,7 @@ export const Chat: React.FC = () => {
             {/* Chat Header */}
             <div style={{ padding: '1rem 1.5rem', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--bg-color)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <button onClick={() => setActiveConvo(null)} style={{ display: window.innerWidth < 768 ? 'flex' : 'none', background: 'transparent', border: 'none', color: 'var(--text-muted)' }}><ArrowLeft /></button>
                 <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--primary-color), #059669)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, color: 'white', fontSize: '0.85rem' }}>
                   {activeConvo.avatar}
                 </div>
@@ -137,38 +218,38 @@ export const Chat: React.FC = () => {
                 </div>
               </div>
               <div style={{ display: 'flex', gap: '8px' }}>
-                <a href={`sms:${activeConvo.phone}?body=Habari ${activeConvo.name.split(' ')[0]},`} title="Normal SMS" style={{ background: 'rgba(99, 102, 241, 0.1)', color: 'var(--primary-color)', padding: '0.5rem', borderRadius: '50%', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <MessageSquare size={18} />
+                <a 
+                  href={`https://wa.me/${activeConvo.phone.replace(/\+/g, '')}`} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="btn-primary" 
+                  style={{ background: '#25D366', border: 'none', textDecoration: 'none', padding: '0.5rem 1rem', display: 'flex', alignItems: 'center', gap: '8px', borderRadius: '20px', fontSize: '0.85rem' }}
+                >
+                  <MessageCircle size={16} /> WhatsApp
                 </a>
-                <a href={`https://wa.me/${activeConvo.phone.replace(/\+/g, '').replace(/^0+/, '255')}?text=Habari ${activeConvo.name.split(' ')[0]},`} target="_blank" rel="noreferrer" title="WhatsApp" style={{ background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', padding: '0.5rem', borderRadius: '50%', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <MessageCircle size={18} />
-                </a>
-                <a href={`mailto:${activeConvo.email}`} title="Email" style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', padding: '0.5rem', borderRadius: '50%', textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Mail size={18} />
-                </a>
-                <a href={`tel:${activeConvo.phone}`} title="Call" style={{ background: 'var(--primary-color)', color: 'white', padding: '0.5rem 1rem', borderRadius: '20px', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem', fontWeight: 600, marginLeft: '4px' }}>
+                <a href={`tel:${activeConvo.phone}`} title="Call" className="btn-outline" style={{ textDecoration: 'none', padding: '0.5rem 1rem', display: 'flex', alignItems: 'center', gap: '8px', borderRadius: '20px', fontSize: '0.85rem' }}>
                   <Phone size={16} /> {t('chat.call')}
                 </a>
               </div>
             </div>
 
             {/* Messages */}
-            <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              {messages.map(msg => {
+            <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {messages.filter(m => m.convoId === activeConvo.id).map(msg => {
                 const isMe = msg.senderId === 'me';
                 return (
                   <div key={msg.id} style={{ display: 'flex', justifyContent: isMe ? 'flex-end' : 'flex-start' }}>
                     <div style={{
-                      maxWidth: '70%',
+                      maxWidth: '75%',
                       background: isMe ? 'var(--primary-color)' : 'rgba(255,255,255,0.07)',
                       color: isMe ? 'white' : 'var(--text-main)',
-                      padding: '0.75rem 1rem',
-                      borderRadius: isMe ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
-                      border: isMe ? 'none' : '1px solid var(--border-color)',
+                      padding: '0.85rem 1.2rem',
+                      borderRadius: isMe ? '20px 20px 4px 20px' : '20px 20px 20px 4px',
+                      boxShadow: '0 2px 5px rgba(0,0,0,0.05)'
                     }}>
-                      <p style={{ margin: 0, fontSize: '0.92rem', lineHeight: 1.5 }}>{msg.text}</p>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '4px', marginTop: '4px' }}>
-                        <span style={{ fontSize: '0.7rem', opacity: 0.7 }}>{formatTime(msg.timestamp)}</span>
+                      <p style={{ margin: 0, fontSize: '0.95rem', lineHeight: 1.5 }}>{msg.text}</p>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '4px', marginTop: '6px' }}>
+                        <span style={{ fontSize: '0.65rem', opacity: 0.7 }}>{formatTime(msg.timestamp)}</span>
                         {isMe && (
                           msg.status === 'seen' ? <CheckCheck size={14} style={{ opacity: 0.9 }} /> :
                           msg.status === 'delivered' ? <CheckCheck size={14} style={{ opacity: 0.5 }} /> :
@@ -183,9 +264,9 @@ export const Chat: React.FC = () => {
             </div>
 
             {/* Message Input */}
-            <div style={{ padding: '1rem 1.5rem', borderTop: '1px solid var(--border-color)', display: 'flex', gap: '0.75rem', alignItems: 'center', background: 'var(--bg-color)' }}>
-              <button style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border-color)', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-muted)' }}>
-                <Image size={18} />
+            <div style={{ padding: '1.2rem 1.5rem', borderTop: '1px solid var(--border-color)', display: 'flex', gap: '0.8rem', alignItems: 'center', background: 'var(--bg-color)' }}>
+              <button className="glass" style={{ width: '42px', height: '42px', borderRadius: '50%', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-muted)' }}>
+                <Image size={20} />
               </button>
               <input
                 type="text"
@@ -193,18 +274,23 @@ export const Chat: React.FC = () => {
                 value={newMessage}
                 onChange={e => setNewMessage(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && sendMessage()}
-                style={{ flex: 1, padding: '0.75rem 1.25rem', borderRadius: '25px', border: '1px solid var(--border-color)', background: 'rgba(255,255,255,0.05)', color: 'var(--text-main)', outline: 'none', fontSize: '0.95rem' }}
+                style={{ flex: 1, padding: '0.85rem 1.5rem', borderRadius: '30px', border: '1px solid var(--border-color)', background: 'rgba(255,255,255,0.03)', color: 'var(--text-main)', outline: 'none', fontSize: '1rem' }}
               />
               <button
                 onClick={sendMessage}
-                style={{ background: 'var(--primary-color)', border: 'none', borderRadius: '50%', width: '42px', height: '42px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white', boxShadow: '0 4px 12px rgba(16, 185, 129, 0.4)' }}
+                style={{ background: 'var(--primary-color)', border: 'none', borderRadius: '50%', width: '46px', height: '46px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'white', boxShadow: '0 4px 15px rgba(16, 185, 129, 0.3)' }}
               >
-                <Send size={18} />
+                <Send size={20} />
               </button>
             </div>
           </div>
         ) : (
-          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>Select a conversation to start chatting</div>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', gap: '1rem' }}>
+            <div style={{ width: '80px', height: '80px', background: 'rgba(255,255,255,0.03)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <MessageSquare size={40} strokeWidth={1} />
+            </div>
+            <p>Select an agent to start a professional conversation</p>
+          </div>
         )}
       </div>
     </div>

@@ -24,7 +24,7 @@ export const Home: React.FC = () => {
   };
 
   const handleCategoryClick = (category: string) => {
-    navigate(`/category/${category.toLowerCase()}`);
+    navigate(`/search?type=${category.toLowerCase()}`);
   };
 
   return (
@@ -34,11 +34,10 @@ export const Home: React.FC = () => {
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-overlay"></div>
-        <div className="blob blob-1"></div>
         
         <div className="container">
           <div className="hero-content animate-fade-in-up">
-            <h1>{t('hero.title.1')}<span className="text-gradient">{t('hero.title.2')}</span></h1>
+            <h1>{t('hero.title.1')}<span className="text-gradient">Nyumba</span> {t('hero.title.2')}</h1>
             <p>
               {t('hero.subtitle')}
             </p>
@@ -53,51 +52,66 @@ export const Home: React.FC = () => {
                   required
                 />
               </div>
-              <button type="submit" className="btn-primary" style={{ height: '100%', padding: '0 2rem' }}>
+              <button type="submit" className="btn-primary">
                 <Search size={20} />
                 {t('hero.searchBtn')}
               </button>
             </form>
-            
-            <div className="flex gap-4" style={{ marginTop: '2rem' }}>
-              <div className="flex items-center gap-2" style={{ color: 'var(--text-muted)' }}>
-                <Activity size={18} className="text-gradient" />
-                <span style={{ fontSize: '0.9rem' }}>500+ {t('hero.addedToday')}</span>
+
+            <div style={{ marginTop: '1rem' }}>
+              <p style={{ fontSize: '0.85rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1rem', color: 'var(--text-muted)' }}>
+                Direct Access: What are you looking for?
+              </p>
+              <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: window.innerWidth < 768 ? 'repeat(2, 1fr)' : 'repeat(auto-fit, minmax(140px, 1fr))', 
+                gap: '12px',
+                width: '100%'
+              }}>
+                {[
+                  { id: 'room', label: t('cat.rooms'), icon: '🛏️' },
+                  { id: 'master-room', label: t('cat.masterRoom'), icon: '🏡' },
+                  { id: 'house', label: t('cat.fullHouse'), icon: '🏢' },
+                  { id: 'apartment', label: t('cat.apartments'), icon: '🏢' },
+                  { id: 'plot', label: t('cat.plots'), icon: '🗺️' },
+                  { id: 'hall', label: t('cat.halls'), icon: '🎭' }
+                ].map((cat) => (
+                  <button 
+                    key={cat.id} 
+                    onClick={() => handleCategoryClick(cat.id)}
+                    className="glass-card" 
+                    style={{
+                      padding: '1.2rem 0.75rem',
+                      borderRadius: '16px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '10px',
+                      transition: 'all 0.3s ease',
+                      cursor: 'pointer',
+                      border: '1px solid rgba(255,255,255,0.08)',
+                      background: 'rgba(255,255,255,0.04)',
+                    }}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-5px)';
+                      e.currentTarget.style.background = 'rgba(255,255,255,0.08)';
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.background = 'rgba(255,255,255,0.04)';
+                    }}
+                  >
+                    <span style={{ fontSize: '1.75rem' }}>{cat.icon}</span>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-main)', textAlign: 'center', lineHeight: 1.2 }}>{cat.label}</span>
+                  </button>
+                ))}
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Categories quick filter */}
-      <section className="container" style={{ padding: '3rem 1.5rem 0' }}>
-        <div className="flex gap-4" style={{ overflowX: 'auto', paddingBottom: '1rem', scrollbarWidth: 'none' }}>
-          {[
-            { id: 'rooms', label: t('cat.rooms') },
-            { id: 'master-room', label: t('cat.masterRoom') },
-            { id: 'houses', label: t('cat.fullHouse') },
-            { id: 'apartments', label: t('cat.apartments') },
-            { id: 'plots', label: t('cat.plots') },
-            { id: 'halls', label: t('cat.halls') }
-          ].map((cat, i) => (
-            <button 
-              key={i} 
-              onClick={() => handleCategoryClick(cat.id)}
-              className="glass" 
-              style={{
-                padding: '0.75rem 1.5rem',
-                borderRadius: '30px',
-                whiteSpace: 'nowrap',
-                color: i === 0 ? 'var(--primary-color)' : 'var(--text-main)',
-                border: i === 0 ? '1px solid var(--primary-color)' : '',
-                fontWeight: i === 0 ? 600 : 400
-              }}
-            >
-              {cat.label}
-            </button>
-          ))}
-        </div>
-      </section>
 
       {/* Properties Section */}
       <section className="properties-section container">
@@ -107,9 +121,18 @@ export const Home: React.FC = () => {
         </div>
         
         <div className="property-grid">
-          {properties.slice(0, 6).map((property, idx) => (
-            <PropertyCard key={property.id} property={property} index={idx} />
-          ))}
+          {properties.length > 0 ? (
+            properties.slice(0, 6).map((property, idx) => (
+              <PropertyCard key={property.id} property={property} index={idx} />
+            ))
+          ) : (
+            <div className="glass" style={{ gridColumn: '1 / -1', padding: '4rem 2rem', textAlign: 'center', borderRadius: 'var(--border-radius)' }}>
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🏠</div>
+              <h3>No properties listed yet</h3>
+              <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>Be the first one to post a room or house in your area!</p>
+              <Link to="/post" className="btn-primary" style={{ textDecoration: 'none', display: 'inline-block' }}>{t('nav.post')}</Link>
+            </div>
+          )}
         </div>
       </section>
 
@@ -125,27 +148,33 @@ export const Home: React.FC = () => {
               <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.85rem' }}>Based on your search history and budget preference</p>
             </div>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
-            {properties.slice(0, 3).map((p, i) => {
-              const scores = [98, 94, 91];
-              const reasons = ['Matches your budget', 'Near your searched area', 'Popular this week'];
-              return (
-                <div key={p.id} className="glass" style={{ borderRadius: 'var(--border-radius)', overflow: 'hidden', position: 'relative', border: '1px solid rgba(16,185,129,0.2)' }}>
-                  <div style={{ position: 'absolute', top: '10px', right: '10px', background: 'var(--primary-color)', color: 'white', padding: '4px 10px', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 700, zIndex: 2 }}>
-                    {scores[i]}% Match
-                  </div>
-                  <img src={p.images[0]} alt={p.title} style={{ width: '100%', height: '140px', objectFit: 'cover' }} />
-                  <div style={{ padding: '1rem' }}>
-                    <div style={{ fontWeight: 700, marginBottom: '4px', fontSize: '0.95rem' }}>{p.title}</div>
-                    <div style={{ color: 'var(--primary-color)', fontWeight: 700, marginBottom: '6px' }}>TZS {p.price.toLocaleString()}/mo</div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.78rem', color: '#10b981', background: 'rgba(16,185,129,0.08)', padding: '4px 10px', borderRadius: '20px', width: 'fit-content' }}>
-                      ✓ {reasons[i]}
+          {properties.length > 0 ? (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+              {properties.slice(0, 3).map((p, i) => {
+                const scores = [98, 94, 91];
+                const reasons = ['Matches your budget', 'Near your searched area', 'Popular this week'];
+                return (
+                  <div key={p.id} className="glass" style={{ borderRadius: 'var(--border-radius)', overflow: 'hidden', position: 'relative', border: '1px solid rgba(16,185,129,0.2)' }}>
+                    <div style={{ position: 'absolute', top: '10px', right: '10px', background: 'var(--primary-color)', color: 'white', padding: '4px 10px', borderRadius: '20px', fontSize: '0.75rem', fontWeight: 700, zIndex: 2 }}>
+                      {scores[i]}% Match
+                    </div>
+                    <img src={p.images[0]} alt={p.title} style={{ width: '100%', height: '140px', objectFit: 'cover' }} />
+                    <div style={{ padding: '1rem' }}>
+                      <div style={{ fontWeight: 700, marginBottom: '4px', fontSize: '0.95rem' }}>{p.title}</div>
+                      <div style={{ color: 'var(--primary-color)', fontWeight: 700, marginBottom: '6px' }}>TZS {p.price.toLocaleString()}/mo</div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.78rem', color: '#10b981', background: 'rgba(16,185,129,0.08)', padding: '4px 10px', borderRadius: '20px', width: 'fit-content' }}>
+                        ✓ {reasons[i]}
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="glass" style={{ padding: '2rem', textAlign: 'center', borderRadius: 'var(--border-radius)', border: '1px dashed var(--primary-color)' }}>
+              <p style={{ color: 'var(--text-muted)', margin: 0 }}>Smart matches will appear here once you start exploring properties.</p>
+            </div>
+          )}
         </div>
       </section>
 

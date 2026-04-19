@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { saveAgent } from '../utils/db';
 
 /**
  * Dalali Auth Security System
@@ -111,6 +112,21 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     // SAVE TO DB
     const updatedUsers = [...allUsers, newUser];
     localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(updatedUsers));
+
+    // SYNC TO AGENT DB: Ensure this person is visible to all users as an active agent/landlord
+    if (data.role === 'agent' || data.role === 'landlord') {
+      saveAgent({
+        id: newUser.id,
+        name: newUser.name,
+        phone: newUser.phone,
+        email: newUser.email,
+        latitude: -6.7924, // Default center
+        longitude: 39.2083,
+        lastSeen: 'Just joined',
+        rating: 5.0,
+        propertiesCount: 0
+      }).catch(err => console.error("Agent sync failed:", err));
+    }
 
     return { success: true, message: 'Registration Successful. You can now login.' };
   };

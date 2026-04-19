@@ -9,9 +9,9 @@ export const Footer: React.FC = () => {
         <div className="footer-content" style={{ display: 'grid', gridTemplateColumns: 'minmax(250px, 2fr) repeat(auto-fit, minmax(180px, 1fr))', gap: '3rem' }}>
           
           <div className="footer-col">
-            <Link to="/" className="nav-logo" style={{ marginBottom: '1.5rem', display: 'inline-flex' }}>
-              <Home className="text-gradient" size={28} />
-              <span style={{ fontSize: '1.5rem', fontWeight: 800 }}>Dalali<span className="text-gradient">App</span></span>
+            <Link to="/" className="nav-logo" style={{ marginBottom: '1.5rem', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+              <img src="/assets/logo.png" alt="Nyumba App" style={{ height: '40px', objectFit: 'contain' }} />
+              <span style={{ fontSize: '1.5rem', fontWeight: 800 }}>Nyumba<span className="text-gradient">App</span></span>
             </Link>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: '1.6', marginBottom: '1.5rem', paddingRight: '1rem' }}>
               The smartest and safest way to find, rent, and manage property in Tanzania. Verified agents, escrow protection, and real-time map discovery.
@@ -51,7 +51,7 @@ export const Footer: React.FC = () => {
             <ul className="footer-links" style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <li><Link to="/about" style={{ color: 'var(--text-muted)' }}>About Us</Link></li>
               <li><Link to="/careers" style={{ color: 'var(--text-muted)' }}>Careers</Link></li>
-              <li><Link to="/sustainability" style={{ color: 'var(--text-muted)' }}>Sustainability at DalaliApp</Link></li>
+              <li><Link to="/sustainability" style={{ color: 'var(--text-muted)' }}>Sustainability at NyumbaApp</Link></li>
               <li><Link to="/press" style={{ color: 'var(--text-muted)' }}>Press</Link></li>
               <li><Link to="/blog" style={{ color: 'var(--text-muted)' }}>Blog</Link></li>
               <li><Link to="/brand" style={{ color: 'var(--text-muted)' }}>Brand Guidelines</Link></li>
@@ -61,7 +61,7 @@ export const Footer: React.FC = () => {
         </div>
         
         <div className="footer-bottom" style={{ marginTop: '4rem', paddingTop: '2rem', borderTop: '1px solid var(--border-color)', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>© {new Date().getFullYear()} DalaliApp Tanzania. All rights reserved.</p>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>© {new Date().getFullYear()} NyumbaApp Tanzania. All rights reserved.</p>
           <div style={{ display: 'flex', gap: '2rem', fontSize: '0.9rem' }}>
             <a href="#" style={{ color: 'var(--text-muted)' }}>Privacy Policy</a>
             <a href="#" style={{ color: 'var(--text-muted)' }}>Terms of Service</a>
