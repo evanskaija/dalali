@@ -323,113 +323,133 @@ export const MapSearch: React.FC = () => {
             
             {/* Properties List */}
             {(viewMode === 'all' || viewMode === 'properties') && (
-              <>
-                <h3 style={{ fontSize: '1.1rem', marginBottom: '-0.5rem' }}>{t('map.nearbyProp')} ({filteredProperties.length})</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>{t('map.nearbyProp')} ({filteredProperties.length})</h3>
                 {filteredProperties.length > 0 ? (
-                  filteredProperties.map((property, idx) => (
-                    <div key={property.id} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', 
+                    gap: '1.5rem' 
+                  }}>
+                    {filteredProperties.map((property, idx) => (
                       <div 
-                        onClick={() => { setActiveProperty(property); setActiveAgent(null); }}
+                        key={property.id} 
                         style={{ 
-                          cursor: 'pointer',
-                          border: activeProperty?.id === property.id ? '2px solid var(--primary-color)' : '1px solid transparent',
-                          borderRadius: 'var(--border-radius)',
-                          transition: 'all 0.3s ease'
+                          display: 'flex', 
+                          flexDirection: 'column', 
+                          gap: '0.5rem',
+                          gridColumn: activeProperty?.id === property.id ? 'span 1' : 'auto'
                         }}
                       >
-                        <PropertyCard 
-                          property={property} 
-                          index={idx} 
-                          onOpenDetails={(p) => {
-                            setSelectedProperty(p);
-                            setActiveProperty(p);
+                        <div 
+                          onClick={() => { setActiveProperty(property); setActiveAgent(null); }}
+                          style={{ 
+                            cursor: 'pointer',
+                            border: activeProperty?.id === property.id ? '2px solid var(--primary-color)' : '1px solid transparent',
+                            borderRadius: 'var(--border-radius)',
+                            transition: 'all 0.3s ease'
                           }}
-                        />
-                      </div>
-                      {/* Map appears below chosen item */}
-                      {activeProperty?.id === property.id && (
-                        <div className="animate-fade-in" style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                          <div style={{ 
-                            height: '250px', 
-                            width: '100%', 
-                            borderRadius: '16px', 
-                            overflow: 'hidden', 
-                            border: '1px solid var(--border-color)',
-                            boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
-                          }}>
-                            <MapContainer 
-                              center={[property.latitude, property.longitude]} 
-                              zoom={15} 
-                              style={{ height: '100%', width: '100%' }}
-                              zoomControl={false}
-                            >
-                              <TileLayer
-                                attribution='&copy; OpenStreetMap contributors'
-                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                              />
-                              <Marker position={[property.latitude, property.longitude]} icon={propertyIcon} />
-                            </MapContainer>
-                          </div>
-                          
-                          <div style={{ display: 'flex', gap: '10px' }}>
-                            <button 
-                              onClick={() => handleBookProperty(property)}
-                              className="btn-primary" 
-                              style={{ flex: 1, background: '#10b981', padding: '0.8rem' }}
-                            >
-                              <HomeIcon size={18} /> {t('map.applyThis')}
-                            </button>
-                            <button 
-                              onClick={() => setSelectedProperty(property)}
-                              className="btn-outline" 
-                              style={{ flex: 1, padding: '0.8rem' }}
-                            >
-                              View Details
-                            </button>
-                          </div>
+                        >
+                          <PropertyCard 
+                            property={property} 
+                            index={idx} 
+                            onOpenDetails={(p) => {
+                              setSelectedProperty(p);
+                              setActiveProperty(p);
+                            }}
+                          />
                         </div>
-                      )}
-                    </div>
-                  ))
+                        {/* Map appears below chosen item */}
+                        {activeProperty?.id === property.id && (
+                          <div className="animate-fade-in" style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                            <div style={{ 
+                              height: '300px', 
+                              width: '100%', 
+                              borderRadius: '16px', 
+                              overflow: 'hidden', 
+                              border: '1px solid var(--border-color)',
+                              boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                            }}>
+                              <MapContainer 
+                                center={[property.latitude, property.longitude]} 
+                                zoom={15} 
+                                style={{ height: '100%', width: '100%' }}
+                                zoomControl={false}
+                              >
+                                <TileLayer
+                                  attribution='&copy; OpenStreetMap contributors'
+                                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                />
+                                <Marker position={[property.latitude, property.longitude]} icon={propertyIcon} />
+                              </MapContainer>
+                            </div>
+                            
+                            <div style={{ display: 'flex', gap: '10px' }}>
+                              <button 
+                                onClick={() => handleBookProperty(property)}
+                                className="btn-primary" 
+                                style={{ flex: 1, background: '#10b981', padding: '0.8rem' }}
+                              >
+                                <HomeIcon size={18} /> {t('map.applyThis')}
+                              </button>
+                              <button 
+                                onClick={() => setSelectedProperty(property)}
+                                className="btn-outline" 
+                                style={{ flex: 1, padding: '0.8rem' }}
+                              >
+                                View Details
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 ) : (
                   <div className="glass" style={{ padding: '2rem', textAlign: 'center', borderRadius: '12px', marginTop: '1rem' }}>
                     <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>No properties found in this area. Try increasing the search radius or checking another location.</p>
                   </div>
                 )}
-              </>
+              </div>
             )}
 
             {/* Agents List */}
             {(viewMode === 'all' || viewMode === 'agents') && (
-              <>
-                <h3 style={{ fontSize: '1.1rem', marginBottom: '-0.5rem', marginTop: viewMode === 'all' ? '1rem' : '0' }}>{t('map.activeDalalis')} ({agentsDisplay.length})</h3>
-                {agentsDisplay.map((agent) => (
-                  <div 
-                    key={agent.id}
-                    onClick={() => { setActiveAgent(agent); setActiveProperty(null); }}
-                    className="glass p-4"
-                    style={{
-                      cursor: 'pointer',
-                      border: activeAgent?.id === agent.id ? '2px solid var(--primary-color)' : '1px solid transparent',
-                      borderRadius: 'var(--border-radius)',
-                      transition: 'all 0.3s ease',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '0.5rem'
-                    }}
-                  >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <h4 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <div style={{ width: '10px', height: '10px', backgroundColor: '#10b981', borderRadius: '50%' }}></div>
-                        {agent.name}
-                      </h4>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.85rem', color: '#fbbf24' }}>
-                        <Star size={14} fill="currentColor" /> {agent.rating}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginTop: viewMode === 'all' ? '2rem' : '0' }}>
+                <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>{t('map.activeDalalis')} ({agentsDisplay.length})</h3>
+                <div style={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', 
+                  gap: '1.5rem' 
+                }}>
+                  {agentsDisplay.map((agent) => (
+                    <div 
+                      key={agent.id}
+                      onClick={() => { setActiveAgent(agent); setActiveProperty(null); }}
+                      className="glass p-4"
+                      style={{
+                        cursor: 'pointer',
+                        border: activeAgent?.id === agent.id ? '2px solid var(--primary-color)' : '1px solid transparent',
+                        borderRadius: 'var(--border-radius)',
+                        transition: 'all 0.3s ease',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.5rem',
+                        gridColumn: activeAgent?.id === agent.id ? 'span 1' : 'auto'
+                      }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <h4 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div style={{ width: '10px', height: '10px', backgroundColor: '#10b981', borderRadius: '50%' }}></div>
+                          {agent.name}
+                        </h4>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.85rem', color: '#fbbf24' }}>
+                          <Star size={14} fill="currentColor" /> {agent.rating}
+                        </div>
                       </div>
-                    </div>
-                    <a href={`tel:${agent.phone}`} style={{ color: 'var(--text-muted)', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}>
-                      <Phone size={14} /> {agent.phone}
-                    </a>
+                      <a href={`tel:${agent.phone}`} style={{ color: 'var(--text-muted)', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}>
+                        <Phone size={14} /> {agent.phone}
+                      </a>
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
                         <span>{agent.propertiesCount} {t('map.propertiesListed')}</span>
                         <span>{t('map.lastSeen')}: {agent.lastSeen}</span>
@@ -467,9 +487,10 @@ export const MapSearch: React.FC = () => {
                           </a>
                         </div>
                       )}
-                  </div>
-                ))}
-              </>
+                    </div>
+                  ))}
+                </div>
+              </div>
             )}
 
           </div>
