@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Navbar } from '../components/Navbar';
-import { Mail, Lock, User, Home as HomeIcon, ChevronRight, ShieldCheck, AlertCircle, CheckCircle, Phone, Search, PlusCircle } from 'lucide-react';
+import { Mail, Lock, User, AlertCircle, CheckCircle, Phone, Search, PlusCircle } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useProperties } from '../contexts/PropertyContext';

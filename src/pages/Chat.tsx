@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Navbar } from '../components/Navbar';
-import { Send, Phone, Image, Check, CheckCheck, Circle, MessageSquare, MessageCircle, Mail, ArrowLeft } from 'lucide-react';
+import { Send, Phone, Image, Check, CheckCheck, Circle, MessageSquare, MessageCircle, ArrowLeft } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useProperties } from '../contexts/PropertyContext';
 import { getChats, saveChats } from '../utils/db';
@@ -29,7 +29,6 @@ interface Conversation {
 
 export const Chat: React.FC = () => {
   const { convoId } = useParams<{ convoId?: string }>();
-  const navigate = useNavigate();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeConvo, setActiveConvo] = useState<Conversation | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);

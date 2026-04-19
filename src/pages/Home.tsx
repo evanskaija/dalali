@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, MapPin, Building, X } from 'lucide-react';
+import { Search, MapPin, Building, X, Zap } from 'lucide-react';
 import { Navbar } from '../components/Navbar';
 import { PropertyCard } from '../components/PropertyCard';
 import { useProperties } from '../contexts/PropertyContext';
@@ -298,7 +298,7 @@ export const Home: React.FC = () => {
           
           <div className="glass p-6 text-center" style={{ flex: '1', minWidth: '300px', padding: '2rem', borderRadius: 'var(--border-radius)' }}>
             <div style={{ background: 'var(--accent-glow)', width: '60px', height: '60px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
-              <Activity size={28} style={{ color: 'white' }} />
+              <Zap size={28} style={{ color: 'white' }} />
             </div>
             <h3>{t('home.step3.title')}</h3>
             <p style={{ color: 'var(--text-muted)', marginTop: '0.5rem' }}>{t('home.step3.desc')}</p>

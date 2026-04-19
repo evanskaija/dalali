@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import { Icon, divIcon } from 'leaflet';
@@ -49,6 +49,7 @@ const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: numbe
 };
 
 export const MapSearch: React.FC = () => {
+  const navigate = useNavigate();
   const [activeProperty, setActiveProperty] = useState<Property | null>(null);
   const [activeAgent, setActiveAgent] = useState<Agent | null>(null);
   const [viewMode, setViewMode] = useState<'all' | 'properties' | 'agents'>('all');

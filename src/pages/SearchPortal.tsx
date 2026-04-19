@@ -10,7 +10,7 @@ export const SearchPortal: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedStreet, setSelectedStreet] = useState('');
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const categories = [
     { id: 'room', label: t('cat.rooms'), icon: <BedDouble size={24} />, description: language === 'en' ? 'Private room in a shared compound' : 'Chumba binafsi kwenye fensi' },
@@ -21,7 +21,6 @@ export const SearchPortal: React.FC = () => {
     { id: 'hall', label: t('cat.halls'), icon: <Theater size={24} />, description: language === 'en' ? 'Spaces for events and functions' : 'Kumbi kwa ajili ya sherehe' }
   ];
 
-  const { language } = useLanguage();
 
   const handleCategorySelect = (id: string) => {
     setSelectedCategory(id);
