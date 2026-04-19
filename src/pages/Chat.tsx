@@ -262,6 +262,13 @@ export const Chat: React.FC = () => {
               <div ref={messagesEndRef} />
             </div>
 
+            {/* Quick Reply Suggestions */}
+            <div style={{ padding: '0.5rem 1.5rem', borderTop: '1px solid var(--border-color)', display: 'flex', gap: '0.5rem', overflowX: 'auto', background: 'rgba(255,255,255,0.02)' }}>
+              {['Is this still available?', 'Can I visit today?', 'What is the price?', 'Send me more photos', 'I am interested'].map(q => (
+                <button key={q} onClick={() => { setNewMessage(q); }} style={{ padding: '6px 14px', borderRadius: '20px', border: '1px solid var(--border-color)', background: 'rgba(16,185,129,0.08)', color: 'var(--primary-color)', fontSize: '0.75rem', fontWeight: 600, whiteSpace: 'nowrap', cursor: 'pointer', flexShrink: 0 }}>{q}</button>
+              ))}
+            </div>
+
             {/* Message Input */}
             <div style={{ padding: '1.2rem 1.5rem', borderTop: '1px solid var(--border-color)', display: 'flex', gap: '0.8rem', alignItems: 'center', background: 'var(--bg-color)' }}>
               <button className="glass" style={{ width: '42px', height: '42px', borderRadius: '50%', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', color: 'var(--text-muted)' }}>
